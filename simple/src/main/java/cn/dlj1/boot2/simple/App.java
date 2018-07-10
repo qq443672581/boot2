@@ -16,7 +16,7 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-    @RequestMapping("")
+    @RequestMapping
     public String index(){
         return "这是一个简单的springboot项目";
     }
