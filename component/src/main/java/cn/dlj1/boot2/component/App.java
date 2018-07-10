@@ -24,7 +24,7 @@ public class App {
     @RequestMapping
     public Object index(){
 
-        return 0;
+        return jdbcTemplate.queryForList("select * from user");
     }
 
 }
