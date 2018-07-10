@@ -1,5 +1,6 @@
 package cn.dlj1.boot2.component;
 
+import cn.dlj1.boot2.component.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,11 +21,13 @@ public class App {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private UserMapper userMapper;
 
     @RequestMapping
     public Object index(){
 
-        return jdbcTemplate.queryForList("select * from user");
+        return userMapper.findAll();
     }
 
 }
