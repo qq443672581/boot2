@@ -23,7 +23,8 @@ public class App {
 
     @RequestMapping
     public Object index(){
-        return jdbcTemplate.queryForList("show tables");
+
+        return 0;
     }
 
 }
