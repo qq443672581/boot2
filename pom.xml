@@ -19,6 +19,7 @@
         <module>component</module>
         <module>mybatis</module>
         <module>session-redis</module>
+        <module>auth2.0</module>
     </modules>
 
     <dependencies>
