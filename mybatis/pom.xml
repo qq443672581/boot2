@@ -9,9 +9,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>component</artifactId>
+    <artifactId>mybatis</artifactId>
     <packaging>jar</packaging>
-    <description>springboot 组件demo</description>
+    <description>springboot 集成 mybatis</description>
 
     <dependencies>
         <dependency>
@@ -24,9 +24,9 @@
             <!--默认使用 光 链接池，可以移除然后使用durid-->
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional> <!-- 这个需要为 true 热部署才有效 -->
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.1.1</version>
         </dependency>
 
     </dependencies>

@@ -1,18 +1,6 @@
-package cn.dlj1.boot2.component.mapper;
+package cn.dlj1.boot2.mybatis.entity;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
-
-@Mapper
-public interface UserMapper {
-
-    @Select("SELECT * FROM user")
-    List<User> findAll();
-
-}
-class User{
+public class User{
     private Integer id;
     private String name;
     private Integer age;
