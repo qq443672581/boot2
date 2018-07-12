@@ -20,6 +20,7 @@
         <module>mybatis</module>
         <module>session-redis</module>
         <module>auth2.0</module>
+        <module>jwt</module>
     </modules>
 
     <dependencies>

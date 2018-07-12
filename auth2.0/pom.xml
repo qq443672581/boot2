@@ -11,7 +11,7 @@
 
     <artifactId>auth2.0</artifactId>
     <packaging>jar</packaging>
-    <description>auth2.0</description>
+    <description>oauth2.0</description>
 
     <dependencies>
 

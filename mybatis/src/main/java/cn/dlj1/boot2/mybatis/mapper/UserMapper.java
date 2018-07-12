@@ -4,6 +4,7 @@ import cn.dlj1.boot2.mybatis.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -18,5 +19,8 @@ public interface UserMapper {
 
     @Insert("<script> insert into user(name,age) value(#{name},#{age})</script>")
     int insert(User user);
+
+    @Update("update user set name=#{name} where id=#{id}")
+    int update(User user);
 
 }

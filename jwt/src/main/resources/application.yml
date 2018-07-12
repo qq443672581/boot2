@@ -1,0 +1,7 @@
+
+audience:
+  clientId: 098f6bcd4621d373cade4e832627b4f6
+  base64Secret: NDQxNDJFNzctNTc0NS00M0VGLTgyRUItM0IwQjk5OENCQzky
+  name: restapiuser
+  # 60 s 过期
+  expiresSecond: 60
