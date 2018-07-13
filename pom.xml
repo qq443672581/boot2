@@ -21,6 +21,9 @@
         <module>session-redis</module>
         <module>auth2.0</module>
         <module>jwt</module>
+        <module>activeMQ</module>
+        <module>thymeleaf</module>
+        <module>cache</module>
     </modules>
 
     <dependencies>
