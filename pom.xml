@@ -24,6 +24,7 @@
         <module>activeMQ</module>
         <module>thymeleaf</module>
         <module>cache</module>
+        <module>auth</module>
     </modules>
 
     <dependencies>
