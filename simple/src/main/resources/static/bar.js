@@ -1,0 +1,1 @@
+callback_("this is bar , <i-button @click='this.app.count++'>按钮</i-button>{{$router.app.count}}");
