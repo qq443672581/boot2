@@ -10,6 +10,7 @@ spring:
 server:
   port: 8080
 
-logging:
-#  file: /Users/fivewords/Desktop/tomcat/log
-
+logging: #  file: /Users/fivewords/Desktop/tomcat/log
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  #type-aliases-package: cn.dlj1.boot2.mybatis.entity

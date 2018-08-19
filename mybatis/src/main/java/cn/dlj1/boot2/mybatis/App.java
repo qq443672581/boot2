@@ -4,6 +4,7 @@ import cn.dlj1.boot2.mybatis.entity.User;
 import cn.dlj1.boot2.mybatis.mapper.UserMapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @SpringBootApplication
 @RestController
+//@MapperScan("cn.dlj1.boot2.mybatis.mapper")
 public class App {
 
     private static Log log = LogFactory.getLog(App.class);
@@ -43,7 +45,9 @@ public class App {
 
     @GetMapping("/insert")
     public Object insert(User user){
-        return userMapper.insert(user);
+        Object o = userMapper.insert(user);
+        System.out.println(        user.getId());
+        return user;
     }
 
 
