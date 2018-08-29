@@ -26,6 +26,7 @@
         <module>cache</module>
         <module>auth</module>
         <module>swagger2</module>
+        <module>cms</module>
     </modules>
 
     <dependencies>
