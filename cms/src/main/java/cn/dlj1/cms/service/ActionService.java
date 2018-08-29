@@ -1,6 +1,6 @@
-package cn.dlj1.cms.web.service;
+package cn.dlj1.cms.service;
 
-import cn.dlj1.cms.web.response.Result;
+import cn.dlj1.cms.response.Result;
 
 import javax.servlet.http.HttpServletRequest;
 

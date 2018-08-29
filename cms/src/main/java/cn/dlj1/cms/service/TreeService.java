@@ -1,4 +1,4 @@
-package cn.dlj1.cms.web.service;
+package cn.dlj1.cms.service;
 
 public interface TreeService {
 }
