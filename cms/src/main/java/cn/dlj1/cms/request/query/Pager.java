@@ -5,6 +5,8 @@ package cn.dlj1.cms.request.query;
  */
 public class Pager {
 
+    public static final Pager EMPTY = new Pager();
+
     private boolean all;
 
     private int now;

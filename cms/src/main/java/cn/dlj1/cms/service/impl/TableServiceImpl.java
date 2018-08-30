@@ -20,18 +20,7 @@ public abstract class TableServiceImpl<K extends Key, T extends Entity>
 
     @Override
     public Result table(Query query) {
-        Result result = validate(query);
-        if (result != Result.SUCCESS) {
-            return result;
-        }
-
-        Pager pager = queryCount(query);
-
-        List<Map<String, Object>> data = queryData(query);
-        Object others = getOthers(query);
-
-        result = callback(query, data, others);
-        return result;
+        return null;
     }
 
     @Override

@@ -24,5 +24,4 @@ public class TestController extends TableControllerImpl<Key.Long, Test> {
         return "/";
     }
 
-
 }

@@ -7,12 +7,11 @@ import cn.dlj1.cms.service.impl.TableServiceImpl;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService extends TableServiceImpl<Key.Long, Entity> {
+public class TestService extends TableServiceImpl<Key.Long, Entity>{
 
     @Override
     public Dao getDao() {
         return null;
     }
-
 
 }
