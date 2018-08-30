@@ -1,11 +1,15 @@
 package cn.dlj1.cms.service;
 
+import cn.dlj1.cms.db.key.Key;
+import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.response.Result;
 
-import javax.servlet.http.HttpServletRequest;
+public interface ActionService<K extends Key, T extends Entity> {
 
-public interface ActionService {
+    Result add();
 
-    Result add(HttpServletRequest request);
+    Result edit();
+
+    Result delete();
 
 }

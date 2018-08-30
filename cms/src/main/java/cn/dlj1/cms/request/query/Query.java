@@ -1,19 +1,12 @@
 package cn.dlj1.cms.request.query;
 
 import cn.dlj1.cms.db.condition.Cnd;
-import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 /**
  * 数据查询
- *
  */
-@Validated
 public class Query {
 
-    @NotNull
     private String[] fields;
 
     private Cnd[] cnds;

@@ -6,6 +6,7 @@ package cn.dlj1.cms.request.query;
 public class Sort {
 
     private String field;
+
     private String type;
 
     public String getField() {

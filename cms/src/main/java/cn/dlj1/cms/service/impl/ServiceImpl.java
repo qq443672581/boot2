@@ -11,27 +11,18 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 实现
  */
-public class ServiceImpl<K extends Key, T extends Entity> implements Service<K, T> {
+public abstract class ServiceImpl<K extends Key, T extends Entity> implements Service<K, T> {
 
     private Dao<K, T> dao;
 
     @Autowired
-    private HttpServletRequest request;
+    private HttpServletRequest httpServletRequest;
 
     @Override
-    public Dao<K, T> getDao() {
-
-        return dao;
-    }
-
-    @Override
-    public void setDao(Dao<K, T> dao) {
-        this.dao = dao;
-    }
-
+    public abstract Dao getDao();
 
     @Override
     public HttpServletRequest getRequest() {
-        return request;
+        return httpServletRequest;
     }
 }

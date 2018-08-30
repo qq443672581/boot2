@@ -1,28 +1,25 @@
 package cn.dlj1.cms.service.impl;
 
-import cn.dlj1.cms.db.condition.Cnd;
+import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.db.key.Key;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Pager;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.TableService;
-import org.springframework.format.Formatter;
-import org.springframework.web.bind.ServletRequestDataBinder;
 
-import java.text.ParseException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class TableServiceImpl<K extends Key, T extends Entity>
+public abstract class TableServiceImpl<K extends Key, T extends Entity>
         extends ServiceImpl<K, T> implements TableService<K, T> {
     public static final String EXPORT_EXCEL_ATTRIBUTE_NAME = "EXPORT_ATTRIBUTE";
 
     @Override
-    public Result table() {
-        Query query = bindQuery();
+    public abstract Dao getDao();
 
+    @Override
+    public Result table(Query query) {
         Result result = validate(query);
         if (result != Result.SUCCESS) {
             return result;
@@ -34,29 +31,7 @@ public class TableServiceImpl<K extends Key, T extends Entity>
         Object others = getOthers(query);
 
         result = callback(query, data, others);
-
         return result;
-    }
-
-    @Override
-    public Query bindQuery() {
-
-        Query query = new Query();
-
-        ServletRequestDataBinder binder = new ServletRequestDataBinder(query);
-        binder.addCustomFormatter(new Formatter<Object>() {
-            @Override
-            public Object parse(String s, Locale locale) throws ParseException {
-                return new Cnd[0];
-            }
-            @Override
-            public String print(Object o, Locale locale) {
-                return null;
-            }
-        }, Cnd[].class);
-
-        binder.bind(getRequest());
-        return query;
     }
 
     @Override
@@ -90,9 +65,7 @@ public class TableServiceImpl<K extends Key, T extends Entity>
     }
 
     @Override
-    public void export() {
-        Query query = bindQuery();
-
-        getRequest().setAttribute(EXPORT_EXCEL_ATTRIBUTE_NAME,"导出的数据");
+    public void export(Query query) {
+        getRequest().setAttribute(EXPORT_EXCEL_ATTRIBUTE_NAME, "导出的数据");
     }
 }

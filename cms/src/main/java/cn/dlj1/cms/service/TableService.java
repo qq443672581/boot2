@@ -6,7 +6,6 @@ import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Pager;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import org.omg.CORBA.Request;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +16,6 @@ import java.util.Map;
  *      前端查询请求 => 主方法(table);
  *      table 方法调用：
  *
- *          bindQuery   绑定查询属性
  *          validate    验证属性
  *          queryCount  查询总条数
  *          queryData   查询数据
@@ -31,11 +29,9 @@ import java.util.Map;
 public interface TableService<K extends Key, T extends Entity> extends Service<K, T> {
 
     @Override
-    Dao<K,T> getDao();
+    Dao getDao();
 
-    Result table();
-
-    Query bindQuery();
+    Result table(Query query);
 
     Result validate(Query query);
 
@@ -49,6 +45,6 @@ public interface TableService<K extends Key, T extends Entity> extends Service<K
 
     String[] getBtnsKey();
 
-    void export();
+    void export(Query query);
 
 }

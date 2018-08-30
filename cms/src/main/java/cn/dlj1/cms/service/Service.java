@@ -9,11 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 服务上级接口
  */
-public interface Service<K extends Key,T extends Entity> {
+public interface Service<K extends Key, T extends Entity> {
 
-    Dao<K,T> getDao();
-
-    void setDao(Dao<K,T> dao);
+    Dao getDao();
 
     HttpServletRequest getRequest();
 
