@@ -4,8 +4,8 @@ import cn.dlj1.cms.db.key.Key;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.service.TableService;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 数据表格接口
@@ -15,12 +15,12 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public interface TableController<K extends Key, T extends Entity> extends Controller<K, T> {
 
-    TableService getTabeleService();
 
-    Result table(Query query);
 
-    ModelAndView exportPage(Query query);
-
-    String export(Query query);
+    @RequestMapping("/table")
+    @ResponseBody
+    default Result table(Query query) {
+        return Result.SUCCESS;
+    }
 
 }
