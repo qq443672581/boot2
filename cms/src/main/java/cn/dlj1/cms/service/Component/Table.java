@@ -13,32 +13,35 @@ import java.util.Map;
 public interface Table<K extends Key, T extends Entity> extends Component<K,T> {
 
     default Result table(T clazz, Query query) {
-        Result result = validate(query);
-        if (result != Result.SUCCESS) {
-            return result;
-        }
-
-        Pager pager = queryCount(query);
-        if(pager == Pager.EMPTY){
-            return Result.SUCCESS;
-        }
-
-        List<Map<String, Object>> data = queryData(query);
-        Object others = getOthers(query);
-
-        result = callback(query, data, others);
-        return result;
+//        Result result = validate(query);
+//        if (result != Result.SUCCESS) {
+//            return result;
+//        }
+//
+//        Pager pager = queryCount(query);
+//        if(pager == Pager.EMPTY){
+//            return Result.SUCCESS;
+//        }
+//
+//        List<Map<String, Object>> data = queryData(query);
+//        Object others = getOthers(query);
+//
+//        result = callback(query, data, others);
+//        return result;
+        return Result.SUCCESS;
     }
 
-    Result validate(Query query);
-
-    Pager queryCount(Query query);
-
-    List<Map<String, Object>> queryData(Query query);
-
-    Object getOthers(Query query);
-
-    Result callback(Query query, List<Map<String, Object>> data, Object others);
+//    default Result validate(Query query){
+//        return null;
+//    }
+//
+//    Pager queryCount(Query query);
+//
+//    List<Map<String, Object>> queryData(Query query);
+//
+//    Object getOthers(Query query);
+//
+//    Result callback(Query query, List<Map<String, Object>> data, Object others);
 
 
 }

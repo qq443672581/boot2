@@ -2,6 +2,7 @@ package cn.dlj1.cms.controller;
 
 import cn.dlj1.cms.db.key.Key;
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.service.Component.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -28,5 +29,7 @@ public interface Controller<K extends Key, T extends Entity> {
         }
         return path;
     }
+
+     Component getC();
 
 }

@@ -4,6 +4,7 @@ import cn.dlj1.cms.db.key.Key;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
+import cn.dlj1.cms.service.Component.Table;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +21,11 @@ public interface TableController<K extends Key, T extends Entity> extends Contro
     @RequestMapping("/table")
     @ResponseBody
     default Result table(Query query) {
-        return Result.SUCCESS;
+        return getTable().table(null,null);
+    }
+
+    default Table getTable(){
+        return (Table)getC();
     }
 
 }
