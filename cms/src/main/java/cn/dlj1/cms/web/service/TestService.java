@@ -1,14 +1,27 @@
 package cn.dlj1.cms.web.service;
 
 import cn.dlj1.cms.dao.Dao;
-import cn.dlj1.cms.service.Component.Table;
+import cn.dlj1.cms.db.key.Key;
+import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.service.ExportService;
+import cn.dlj1.cms.service.TableService;
+import cn.dlj1.cms.web.dao.TestDao;
+import cn.dlj1.cms.web.entity.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService implements Table{
+public class TestService implements
+        TableService,
+        ExportService {
+
+    @Autowired
+    private TestDao dao;
 
     @Override
     public Dao getDao() {
-        return null;
+        return dao;
     }
+
+
 }

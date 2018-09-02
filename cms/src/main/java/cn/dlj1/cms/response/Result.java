@@ -35,6 +35,12 @@ public class Result {
             super(msg);
         }
     }
+    public static class Success extends Result {
+        public Success(Object object) {
+            super();
+            super.data = object;
+        }
+    }
 
     public int getStatus() {
         return status;

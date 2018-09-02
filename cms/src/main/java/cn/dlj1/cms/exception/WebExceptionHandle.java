@@ -31,6 +31,7 @@ public class WebExceptionHandle {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Result exception(Exception exception) {
+        exception.printStackTrace();
         log.error(String.format("异常:[%s]", exception.getMessage()));
         return Result.FAIL;
     }

@@ -1,17 +1,21 @@
 package cn.dlj1.cms.controller;
 
-import cn.dlj1.cms.db.key.Key;
-import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.service.Component.Component;
+import cn.dlj1.cms.service.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * 控制器上层接口
+ * 控制器顶级接口
  *
- * @param <K>
- * @param <T>
  */
-public interface Controller<K extends Key, T extends Entity> {
+public interface Controller {
+
+    /**
+     * 获取服务实现类
+     * 通过下层的类来注入
+     *
+     * @return
+     */
+    Service getService();
 
     /**
      * 获取模块的路径
@@ -30,6 +34,5 @@ public interface Controller<K extends Key, T extends Entity> {
         return path;
     }
 
-     Component getC();
 
 }
