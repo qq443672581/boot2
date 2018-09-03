@@ -10,6 +10,8 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface Cloumn {
 
+    String value();
 
+    boolean export() default true;
 
 }

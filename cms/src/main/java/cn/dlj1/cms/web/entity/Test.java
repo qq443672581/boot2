@@ -1,22 +1,17 @@
 package cn.dlj1.cms.web.entity;
 
-import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.entity.LongEntity;
+import cn.dlj1.cms.entity.annotation.Cloumn;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-public class Test extends Entity{
+@TableName("test")
+public class Test extends LongEntity {
 
-    private long id;
-
+    @Cloumn("姓名")
     private String name;
 
+    @Cloumn("年龄")
     private int age;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -33,4 +28,6 @@ public class Test extends Entity{
     public void setAge(int age) {
         this.age = age;
     }
+
 }
+

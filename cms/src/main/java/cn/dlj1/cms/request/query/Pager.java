@@ -13,7 +13,7 @@ public class Pager {
 
     private int pageSize;
 
-    private long count;
+    private int count;
 
     public boolean isAll() {
         return all;
@@ -39,11 +39,29 @@ public class Pager {
         this.pageSize = pageSize;
     }
 
-    public long getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(long count) {
+    public void setCount(int count) {
         this.count = count;
     }
+
+    public boolean isEmpty() {
+        if (this == EMPTY || this.getCount() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public Pager() {
+    }
+
+    public Pager init() {
+        this.now = 1;
+        this.count = 0;
+        this.pageSize = 20;
+        return this;
+    }
+
 }

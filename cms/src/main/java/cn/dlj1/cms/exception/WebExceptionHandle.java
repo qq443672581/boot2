@@ -16,8 +16,17 @@ public class WebExceptionHandle {
 
     private static final Log log = LogFactory.getLog(WebExceptionHandle.class);
 
+    @ExceptionHandler(MessageException.class)
+    @ResponseBody
+    public Result bindException(MessageException exception) {
+        String message = exception.getMessage();
+        Class clazz = exception.getClazz();
+        log.error(String.format("[%s][%s]", clazz.getName(), message));
+        return new Result.Fail(message);
+    }
+
     /**
-     * 属性绑定异常
+     * 通用消息异常
      *
      * @param exception
      * @return

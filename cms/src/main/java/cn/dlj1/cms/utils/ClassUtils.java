@@ -1,12 +1,9 @@
 package cn.dlj1.cms.utils;
 
-import cn.dlj1.cms.entity.Entity;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 类工具
@@ -16,6 +13,9 @@ import java.util.List;
  */
 public class ClassUtils {
 
+    private static final Map<String, Field[]> fields = new HashMap<>();
+    private static byte[] lock = new byte[0];
+
     /**
      * 递归获取本类的字段以及父类的字段<br>
      *
@@ -23,25 +23,37 @@ public class ClassUtils {
      * @return
      */
     public static Field[] getFields(Class<?> clazz, boolean filterStatic) {
-        List<Field> list = new ArrayList<Field>();
-
-        Class<?> _clazz = clazz;
-        while (_clazz != Object.class) {
-            Field[] fields = _clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (filterStatic && Modifier.isStatic(field.getModifiers())) {
-                    continue;
-                }
-                list.add(field);
+        if (null != fields.get(clazz.getName())) {
+            return fields.get(clazz.getName());
+        }
+        synchronized (lock) {
+            if (null != fields.get(clazz.getName())) {
+                return fields.get(clazz.getName());
             }
+            List<Field> list = new ArrayList<Field>();
 
-            _clazz = _clazz.getSuperclass();
+            Class<?> _clazz = clazz;
+            while (_clazz != Object.class) {
+                List<Field> list2 = new ArrayList<Field>();
+                Field[] fields = _clazz.getDeclaredFields();
+                for (Field field : fields) {
+                    if (filterStatic && Modifier.isStatic(field.getModifiers())) {
+                        continue;
+                    }
+                    list2.add(field);
+                }
+                Collections.reverse(list2);
+                list.addAll(list2);
+
+                _clazz = _clazz.getSuperclass();
+            }
+            Collections.reverse(list);
+            Field[] fs = new Field[list.size()];
+            list.toArray(fs);
+            fields.put(clazz.getName(), fs);
+
         }
-        Field[] fieldArr = new Field[list.size()];
-        for (int i = 0; i < fieldArr.length; i++) {
-            fieldArr[i] = list.get(i);
-        }
-        return fieldArr;
+        return fields.get(clazz.getName());
     }
 
     /**

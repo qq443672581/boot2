@@ -5,7 +5,7 @@ import cn.dlj1.cms.web.entity.Test;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface TestDao extends Dao<Long, Test> {
+public interface TestDao extends Dao<Test> {
 
 
 }

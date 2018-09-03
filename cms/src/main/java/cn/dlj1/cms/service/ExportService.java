@@ -1,17 +1,17 @@
 package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.utils.JSONUtils;
+import cn.dlj1.cms.service.supports.ExportUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.ibatis.jdbc.SQL;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  */
-public interface ExportService extends Service {
+public interface ExportService<T extends Entity> extends TableService<T> {
 
     static Log log = LogFactory.getLog(ExportService.class);
 
@@ -21,14 +21,18 @@ public interface ExportService extends Service {
      * @return
      */
     default Result getExportInfos() {
-        Entity entity = getDao().selectOneById("test", 1);
+        Class<T> clazz = getModuleClazz();
+        Map map = ExportUtils.getExportFields(clazz);
+        return new Result.Success(map);
+    }
 
-        List<Entity> entitys = getDao().selectAll("test");
-
-        log.info(JSONUtils.toJSONString(entity));
-
-        return new Result.Success(entitys);
-//        return new Result.Success(ClassUtils.getStringFields(getModuleClazz()));
+    /**
+     * 导出
+     *
+     * @return
+     */
+    default byte[] export(Query query) {
+        return new String("测试的").getBytes();
     }
 
 }

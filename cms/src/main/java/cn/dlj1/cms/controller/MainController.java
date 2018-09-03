@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 模块主页面接口
  *
  */
-public interface MainController extends Controller {
+public interface MainController<T extends Entity> extends Controller<T> {
 
     static Log log = LogFactory.getLog(MainController.class);
 
