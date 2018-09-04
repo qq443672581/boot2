@@ -5,23 +5,15 @@ package cn.dlj1.cms.request.query;
  */
 public class Pager {
 
-    public static final Pager EMPTY = new Pager();
-
-    private boolean all;
+//    public static final Pager EMPTY = new Pager();
 
     private int now;
 
     private int pageSize;
 
-    private int count;
+    private int pages;
 
-    public boolean isAll() {
-        return all;
-    }
-
-    public void setAll(boolean all) {
-        this.all = all;
-    }
+    private long count;
 
     public int getNow() {
         return now;
@@ -39,19 +31,20 @@ public class Pager {
         this.pageSize = pageSize;
     }
 
-    public int getCount() {
+    public long getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public void setCount(long count) {
         this.count = count;
     }
 
-    public boolean isEmpty() {
-        if (this == EMPTY || this.getCount() == 0) {
-            return true;
-        }
-        return false;
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
     }
 
     public Pager() {
@@ -61,6 +54,7 @@ public class Pager {
         this.now = 1;
         this.count = 0;
         this.pageSize = 20;
+        this.pages = 0;
         return this;
     }
 

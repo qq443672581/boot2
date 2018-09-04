@@ -16,6 +16,10 @@ public class MessageException extends RuntimeException {
         this.clazz = clazz;
     }
 
+    public MessageException(String message) {
+        super(message);
+    }
+
     public Class getClazz() {
         return clazz;
     }

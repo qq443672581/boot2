@@ -1,6 +1,7 @@
 package cn.dlj1.cms.web.service;
 
 import cn.dlj1.cms.dao.Dao;
+import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.service.ActionService;
 import cn.dlj1.cms.service.ExportService;
 import cn.dlj1.cms.service.TableService;
@@ -23,4 +24,8 @@ public class TestService implements
         return dao;
     }
 
+    @Override
+    public Object getOthers(Query query) {
+        return dao.selectIds();
+    }
 }

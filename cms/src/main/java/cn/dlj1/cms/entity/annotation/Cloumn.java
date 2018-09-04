@@ -10,8 +10,18 @@ import java.lang.annotation.*;
 @Target(ElementType.FIELD)
 public @interface Cloumn {
 
+    /**
+     * 注释
+     *
+     * @return
+     */
     String value();
 
-    boolean export() default true;
+    /**
+     * 可被查询 导出的字段
+     *
+     * @return
+     */
+    boolean search() default true;
 
 }

@@ -85,6 +85,17 @@ public class ClassUtils {
         return fs;
     }
 
+    public static Field find(Class<?> clazz, String field) {
+        Field[] fields = getFields(clazz);
+        for (Field f : fields) {
+            if (f.getName().equals(field)) {
+                return f;
+            }
+
+        }
+        return null;
+    }
+
     /**
      * 获取字段的 set方法
      *

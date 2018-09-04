@@ -1,7 +1,5 @@
 package cn.dlj1.cms.entity.annotation;
 
-import org.springframework.util.Assert;
-
 import java.lang.reflect.Field;
 
 public class CloumnUtils {
@@ -19,6 +17,14 @@ public class CloumnUtils {
             return null;
         else
             return cloumn.value();
+    }
+
+    public static boolean isSearch(Field field) {
+        Cloumn cloumn = get(field);
+        if (null == cloumn)
+            return true;
+        else
+            return cloumn.search();
     }
 
 }

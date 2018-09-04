@@ -7,5 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface TestDao extends Dao<Test> {
 
+    //    @Select("select id from test")
+    int[] selectIds();
 
 }

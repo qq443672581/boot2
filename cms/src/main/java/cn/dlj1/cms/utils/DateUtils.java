@@ -13,6 +13,10 @@ import java.util.Date;
  */
 public class DateUtils {
 
+    public static final String FORMAT_DATE = "yyyy-MM-dd";
+    public static final String FORMAT_TIME = "hh:mm:ss";
+    public static final String FORMAT_DATETIME = "yyyy-MM-dd hh:mm:ss";
+
     /**
      * 1秒
      */

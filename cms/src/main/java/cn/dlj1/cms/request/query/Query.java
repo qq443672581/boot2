@@ -46,4 +46,16 @@ public class Query {
     public void setPager(Pager pager) {
         this.pager = pager;
     }
+
+    public void initPager() {
+        if (null == getPager()) {
+            setPager(new Pager().init());
+        }
+        if (getPager().getNow() == 0) {
+            getPager().setNow(1);
+        }
+        if (getPager().getPageSize() == 0) {
+            getPager().setPageSize(20);
+        }
+    }
 }

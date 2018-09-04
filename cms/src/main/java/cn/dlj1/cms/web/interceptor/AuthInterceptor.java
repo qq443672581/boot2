@@ -8,7 +8,11 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class Interceptor extends HandlerInterceptorAdapter {
+/**
+ * 权限控制
+ *
+ */
+public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     private WebApplicationContext context;
 
