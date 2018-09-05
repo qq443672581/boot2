@@ -1,61 +1,44 @@
 package cn.dlj1.cms.request.query;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+
 /**
  * 分页
+ *
+ * 继承自 {@link Page}
  */
-public class Pager {
+public class Pager<T> extends Page<T> {
 
-//    public static final Pager EMPTY = new Pager();
+    public static final int DEFAULT_PAGE_SIZE = 20;
 
-    private int now;
+    private long pageTotal;
 
-    private int pageSize;
-
-    private int pages;
-
-    private long count;
-
-    public int getNow() {
-        return now;
+    public long getPageTotal() {
+        return pageTotal;
     }
 
-    public void setNow(int now) {
-        this.now = now;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
-    }
-
-    public int getPages() {
-        return pages;
-    }
-
-    public void setPages(int pages) {
-        this.pages = pages;
+    public void setPageTotal(long pageTotal) {
+        this.pageTotal = pageTotal;
     }
 
     public Pager() {
     }
 
-    public Pager init() {
-        this.now = 1;
-        this.count = 0;
-        this.pageSize = 20;
-        this.pages = 0;
-        return this;
+    /**
+     * 初始化页数
+     */
+    public void initPages() {
+        if (super.getTotal() != 0) {
+            return;
+        }
+        if (super.getSize() == 0) {
+            super.setSize(DEFAULT_PAGE_SIZE);
+        }
+        setPageTotal(
+                (super.getTotal() % super.getSize() == 0 ?
+                        (super.getTotal() / super.getSize()) :
+                        (super.getTotal() / super.getSize() + 1))
+        );
     }
 
 }

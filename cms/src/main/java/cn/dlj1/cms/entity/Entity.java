@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * 实体 父类
  */
-public interface Entity {
+public interface Entity extends Serializable{
 
     Serializable getId();
 

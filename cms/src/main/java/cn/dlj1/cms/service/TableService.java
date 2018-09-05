@@ -2,14 +2,12 @@ package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.request.query.Pager;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.service.supports.QueryWrapperParse;
 import cn.dlj1.cms.service.supports.FieldCheck;
+import cn.dlj1.cms.service.supports.QueryWrapperParse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 
 import java.util.List;
 import java.util.Map;
@@ -19,61 +17,61 @@ public interface TableService<T extends Entity> extends Service<T> {
     @Override
     Dao<T> getDao();
 
-    default Result table(Query query) {
+    default Result table(Query<T> query) {
+        // 初始化分页
         query.initPager();
 
-        queryParams(query);
+        // 参数钩子
+        tableQueryParams(query);
 
-        List<Map<String, Object>> data = query(query);
+        // 参数验证
+        tableValidate(query);
 
-        queryData(query, data);
+        // 数据最后的查询
+        List<Map<String, Object>> list = tableQuery(query);
 
-        Object others = getOthers(query);
+        // 其他要返回的数据
+        Object others = tableOthers(query);
 
-        Result result = callback(query.getPager(), data, others);
+        // 最后的回调钩子
+        Result result = tableCallback(query, list, others);
 
         return result;
     }
 
-    default void queryParams(Query query) {
+    // 对请求数据进行修改编辑
+    default void tableQueryParams(Query<T> query) {
     }
 
-    default List<Map<String, Object>> query(Query query) {
-        Pager pager = query.getPager();
-        QueryWrapper<T> wrapper = new QueryWrapper<T>();
-
+    default void tableValidate(Query<T> query) {
         // 字段验证
         FieldCheck.searchFieldCheck(getModuleClazz(), query.getFields());
+
+    }
+
+    default List<Map<String, Object>> tableQuery(Query<T> query) {
+        QueryWrapper<T> wrapper = new QueryWrapper<T>();
         wrapper.select(query.getFields());
 
         QueryWrapperParse.parseCnd(wrapper, query.getCnds());
         QueryWrapperParse.parseSort(wrapper, query.getSort());
 
-        IPage<Map<String, Object>> page = getDao().selectMapsPage(
-                new Page<T>(pager.getNow(), pager.getPageSize()),
-                wrapper);
+        IPage<Map<String, Object>> iPage =
+                getDao().selectMapsPage(query.getPager(), wrapper);
 
-        pager.setCount(page.getTotal());
-        if (pager.getCount() != 0) {
-            pager.setPages((int)
-                    (pager.getCount() % pager.getPageSize() == 0 ?
-                            (pager.getCount() / pager.getPageSize()) :
-                            (pager.getCount() / pager.getPageSize() + 1))
-            );
-        }
-        return page.getRecords();
+        query.getPager().setTotal(iPage.getTotal());
+        query.getPager().initPages();
+
+        return iPage.getRecords();
     }
 
-    default void queryData(Query query, List<Map<String, Object>> list) {
-    }
-
-    default Object getOthers(Query query) {
+    default Object tableOthers(Query<T> query) {
         return null;
     }
 
-    default Result callback(Pager pager, List<Map<String, Object>> data, Object others) {
-        Result result = new Result.Success(data);
-        result.setPager(pager);
+    default Result tableCallback(Query<T> query, List<Map<String, Object>> list, Object others) {
+        Result result = new Result.Success(list);
+        result.setPager(query.getPager());
         result.setOthers(others);
 
         return result;

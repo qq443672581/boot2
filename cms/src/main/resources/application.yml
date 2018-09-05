@@ -10,4 +10,7 @@ spring:
     time-zone: GMT+8
 
 mybatis-plus:
-  mapper-locations: classpath:mapper/*.xml
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    call-setters-on-nulls: false
+#  type-aliases-super-type: java.lang.Object

@@ -4,8 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.dlj1.cms.web.dao.TestDao">
 
-    <select id="selectIds" resultType="int">
-        select id from test limit 1
+    <select id="selectAll" resultType="hashmap">
+        select id from test
+        <where >
+          <if test="map.id != null" >
+              id >= #{map.id}
+          </if>
+        </where>
     </select>
 
 </mapper>

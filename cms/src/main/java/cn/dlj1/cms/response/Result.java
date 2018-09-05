@@ -80,5 +80,6 @@ public class Result {
 
     public void setPager(Pager pager) {
         this.pager = pager;
+        this.pager.setRecords(null);
     }
 }

@@ -40,7 +40,12 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
-    default Result delete(Serializable id) {
+    default void packaging(T entity){
+
+    }
+
+
+    default Result delete(Serializable... id) {
         int i = getDao().deleteById(id);
         if (i == 1) {
             return Result.SUCCESS;
