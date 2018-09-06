@@ -3,7 +3,6 @@ package cn.dlj1.cms.entity;
 import cn.dlj1.cms.entity.annotation.Cloumn;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import org.apache.ibatis.annotations.SelectKey;
 
 /**
  *
