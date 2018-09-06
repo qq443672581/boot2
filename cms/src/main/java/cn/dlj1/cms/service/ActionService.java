@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 操作
@@ -45,12 +46,16 @@ public interface ActionService<T extends Entity> extends Service<T> {
     }
 
 
-    default Result delete(Serializable... id) {
-        int i = getDao().deleteById(id);
-        if (i == 1) {
-            return Result.SUCCESS;
+    default Result delete(Serializable... ids) {
+        if(null == ids || ids.length == 0){
+            return Result.FAIL_NULL;
         }
-        throw new MessageException(getModuleClazz(), "删除失败");
+        for (int i = 0; i < ids.length; i++) {
+            if (getDao().deleteById(ids[i]) != 1) {
+                throw new MessageException(getModuleClazz(), "删除失败!");
+            }
+        }
+        return Result.SUCCESS;
 //        log.error(String.format("删除实体[%s]时错误", getModuleClazz().getName() ));
 //        return Result.FAIL;
     }

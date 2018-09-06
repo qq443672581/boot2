@@ -1,6 +1,9 @@
 package cn.dlj1.cms.request.query;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
 
 /**
  * 分页
@@ -19,6 +22,12 @@ public class Pager<T> extends Page<T> {
 
     public void setPageTotal(long pageTotal) {
         this.pageTotal = pageTotal;
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Override
+    public List<T> getRecords() {
+        return super.getRecords();
     }
 
     public Pager() {

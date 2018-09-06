@@ -7,6 +7,7 @@ public class Result {
 
     public static final Result SUCCESS = new Result();
     public static final Result FAIL = new Fail("系统异常!");
+    public static final Result FAIL_NULL = new Fail("数据为空!");
 
     private int status = 0;
 

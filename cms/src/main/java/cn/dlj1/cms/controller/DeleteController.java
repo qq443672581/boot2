@@ -17,8 +17,8 @@ public interface DeleteController<T extends Entity,K extends Serializable> exten
 
     @RequestMapping("/delete")
     @ResponseBody
-    default Result add(@Validated @NotNull K id) {
-        return getActionService().delete(id);
+    default Result add(@Validated @NotNull K... ids) {
+        return getActionService().delete(ids);
     }
 
 }
