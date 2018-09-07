@@ -13,4 +13,6 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   configuration:
     call-setters-on-nulls: false
+server:
+  port: 8080
 #  type-aliases-super-type: java.lang.Object
