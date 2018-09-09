@@ -23,7 +23,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             context = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
         }
 
-
         return true;
     }
 

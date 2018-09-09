@@ -41,13 +41,13 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
-    default void packaging(T entity){
+    default void packaging(T entity) {
 
     }
 
 
     default Result delete(Serializable... ids) {
-        if(null == ids || ids.length == 0){
+        if (null == ids || ids.length == 0) {
             return Result.FAIL_NULL;
         }
         for (int i = 0; i < ids.length; i++) {
@@ -60,5 +60,9 @@ public interface ActionService<T extends Entity> extends Service<T> {
 //        return Result.FAIL;
     }
 
+    default Result select(String text) {
+
+        return Result.SUCCESS;
+    }
 
 }
