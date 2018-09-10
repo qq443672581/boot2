@@ -1,25 +1,25 @@
 package cn.dlj1.cms.controller;
 
 import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.service.ActionService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+
 /**
- * 添加接口
+ * 查询一条数据接口（展示接口）
  *
  *
  */
-public interface AddController<T extends Entity> extends Controller<T> {
+public interface ViewController<T extends Entity> extends Controller<T> {
 
-
-    @RequestMapping("/add")
+    @RequestMapping("/view")
     @ResponseBody
-    default Result add(@Validated T entity) {
-        return getActionService().add(entity);
+    default Result view(@Validated @NotNull long id) {
+        return getActionService().view(id);
     }
 
 }

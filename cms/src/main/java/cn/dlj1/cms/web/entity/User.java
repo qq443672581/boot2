@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.util.Date;
 
-@TableName("test")
-public class Test extends LongEntity {
+@TableName("user")
+public class User extends LongEntity {
 
     @Cloumn("姓名")
     private String name;

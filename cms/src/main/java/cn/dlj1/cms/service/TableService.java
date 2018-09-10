@@ -4,7 +4,7 @@ import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.service.supports.FieldCheck;
+import cn.dlj1.cms.service.supports.FieldUtils;
 import cn.dlj1.cms.service.supports.QueryWrapperParse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -45,7 +45,7 @@ public interface TableService<T extends Entity> extends Service<T> {
 
     default void tableValidate(Query<T> query) {
         // 字段验证
-        FieldCheck.searchFieldCheck(getModuleClazz(), query.getFields());
+        FieldUtils.searchFieldCheck(getModuleClazz(), query.getFields());
 
     }
 

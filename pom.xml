@@ -27,6 +27,7 @@
         <module>auth</module>
         <module>swagger2</module>
         <module>cms</module>
+        <module>shell</module>
     </modules>
 
     <dependencies>

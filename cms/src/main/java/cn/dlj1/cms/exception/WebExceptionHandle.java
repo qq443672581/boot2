@@ -7,6 +7,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * 统一异常处理
@@ -24,6 +25,19 @@ public class WebExceptionHandle {
         log.error(String.format("[%s][%s]", clazz.getName(), message));
         return new Result.Fail(message);
     }
+
+    // 方法参数类型不匹配
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseBody
+    public Result methodArgumentTypeException(MethodArgumentTypeMismatchException exception) {
+        log.error(String.format("[%s.%s][%s]参数类型不正确",
+                exception.getParameter().getDeclaringClass(),
+                exception.getParameter().getMethod().getName(),
+                exception.getName()
+        ));
+        return new Result.Fail(String.format("参数[%s]类型不正确!", exception.getName()));
+    }
+
 
     /**
      * 通用消息异常

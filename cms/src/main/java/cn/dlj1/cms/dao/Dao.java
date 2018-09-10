@@ -15,6 +15,5 @@ import java.util.Map;
  */
 public interface Dao<T extends Entity> extends BaseMapper<T> {
 
-    List<Map<String, Object>> selectPage(Page<T> page, @Param("map") Map map);
 
 }

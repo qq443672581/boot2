@@ -4,19 +4,19 @@ import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.service.ActionService;
 import cn.dlj1.cms.service.ExportService;
 import cn.dlj1.cms.service.TableService;
-import cn.dlj1.cms.web.dao.TestDao;
-import cn.dlj1.cms.web.entity.Test;
+import cn.dlj1.cms.web.dao.UserDao;
+import cn.dlj1.cms.web.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TestService implements
-        TableService<Test>,
-        ActionService<Test>,
-        ExportService<Test> {
+public class UserService implements
+        TableService<User>,
+        ActionService<User>,
+        ExportService<User> {
 
     @Autowired
-    private TestDao dao;
+    private UserDao dao;
 
     @Override
     public Dao getDao() {

@@ -2,13 +2,17 @@ package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.response.Result;
+import cn.dlj1.cms.service.supports.FieldUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 操作
@@ -58,6 +62,18 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.SUCCESS;
 //        log.error(String.format("删除实体[%s]时错误", getModuleClazz().getName() ));
 //        return Result.FAIL;
+    }
+
+    default Result view(Serializable id) {
+        QueryWrapper queryWrapper = new QueryWrapper<T>();
+        queryWrapper.select(FieldUtils.getSearchFields(getModuleClazz()));
+        queryWrapper.eq(EntityUtils.getEntityPk(getModuleClazz()), id);
+
+        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
+        if (null == list || list.size() != 1) {
+            return new Result.Fail("数据不存在或存在多条!");
+        }
+        return new Result.Success(list.get(0));
     }
 
     default Result select(String text) {
