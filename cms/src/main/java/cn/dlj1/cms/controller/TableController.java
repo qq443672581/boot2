@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 数据表格接口
+ *
+ *
  */
 public interface TableController<T extends Entity> extends Controller<T> {
 

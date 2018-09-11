@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 修改接口
+ *
+ *
  */
 public interface EditController<T extends Entity> extends Controller<T> {
 

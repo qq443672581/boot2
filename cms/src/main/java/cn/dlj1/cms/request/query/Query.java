@@ -1,6 +1,7 @@
 package cn.dlj1.cms.request.query;
 
 import cn.dlj1.cms.db.condition.Cnd;
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 public class Query<T> {
 
     @JsonIgnore
+    @JSONField(serialize = false)
     private HttpServletRequest request;
 
     private String[] fields;
 
-    // 查询条件，可以使用 cn.dlj1.cms.db.condition.CndUtils.toObjMap 进行转化map
+    /**
+     * 查询条件，可以使用 cn.dlj1.cms.db.condition.CndUtils.toObjMap 进行转化map
+     */
     private Cnd[] cnds;
 
     private Sort sort;

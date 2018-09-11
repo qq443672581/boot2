@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
+ * 查询接口参数 解析器
  *
  *
  * {@link cn.dlj1.cms.request.query.Query}

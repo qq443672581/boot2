@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController implements
         MainController<User>,
         TableController<User>,
-        ViewController<User>,
+        ViewController<User, Long>,
         AddController<User>,
         EditController<User>,
         DeleteController<User, Long>,

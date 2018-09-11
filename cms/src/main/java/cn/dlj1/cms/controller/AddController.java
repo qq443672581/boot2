@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 添加接口
+ *
+ *
  */
 public interface AddController<T extends Entity> extends Controller<T> {
-
 
     @PostMapping("/add")
     @ResponseBody

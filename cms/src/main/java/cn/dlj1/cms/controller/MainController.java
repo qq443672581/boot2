@@ -1,6 +1,5 @@
 package cn.dlj1.cms.controller;
 
-import cn.dlj1.cms.db.key.Key;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.response.Result;
 import org.apache.commons.logging.Log;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 模块主页面接口
+ *
  *
  */
 public interface MainController<T extends Entity> extends Controller<T> {

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 控制器顶级接口
+ *
+ *
  */
 public interface ControllerSuper<T extends Entity> {
 

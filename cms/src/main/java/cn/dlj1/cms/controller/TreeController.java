@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 树接口
+ *
+ *
  */
 public interface TreeController<T extends Entity> extends Controller<T> {
 

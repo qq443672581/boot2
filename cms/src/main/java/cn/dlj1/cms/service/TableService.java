@@ -46,10 +46,11 @@ public interface TableService<T extends Entity> extends Service<T> {
     default void tableValidate(Query<T> query) {
         // 字段验证
         FieldUtils.searchFieldCheck(getModuleClazz(), query.getFields());
-
     }
 
     default List<Map<String, Object>> tableQuery(Query<T> query) {
+        // 可以转成一个map 进行处理多表VO处理： CndUtils.toObjMap(query.getCnds());
+
         QueryWrapper<T> wrapper = new QueryWrapper<T>();
         wrapper.select(query.getFields());
 

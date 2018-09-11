@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Pager<T> extends Page<T> {
 
+    // 默认每页条数
     public static final int DEFAULT_PAGE_SIZE = 20;
 
     private long pageTotal;

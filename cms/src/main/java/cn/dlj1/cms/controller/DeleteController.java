@@ -11,6 +11,8 @@ import java.io.Serializable;
 
 /**
  * 删除接口
+ *
+ *
  */
 public interface DeleteController<T extends Entity,K extends Serializable> extends Controller<T> {
 
