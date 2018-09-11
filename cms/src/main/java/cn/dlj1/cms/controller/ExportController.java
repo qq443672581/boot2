@@ -5,7 +5,7 @@ import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.ExportService;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ public interface ExportController<T extends Entity> extends Controller<T> {
      *
      * @return
      */
-    @RequestMapping("/exportInfos")
+    @GetMapping("/exportInfos")
     @ResponseBody
     default Result exportInfos() {
         ExportService service = (ExportService) getService();
@@ -36,7 +36,7 @@ public interface ExportController<T extends Entity> extends Controller<T> {
      * @return
      */
 
-    @RequestMapping(value = "/export", produces = AttachmentView.APPLICATION_VIEW_NAME)
+    @GetMapping(value = "/export", produces = AttachmentView.APPLICATION_VIEW_NAME)
     default String export(HttpServletRequest request, Query query) {
         ExportService service = (ExportService) getService();
         return AttachmentView.view(request, "测试.txt", service.export(query));

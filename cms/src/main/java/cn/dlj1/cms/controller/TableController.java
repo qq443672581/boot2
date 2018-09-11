@@ -5,7 +5,7 @@ import cn.dlj1.cms.request.query.Query;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.TableService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public interface TableController<T extends Entity> extends Controller<T> {
 
-    @RequestMapping("/table")
+    @GetMapping("/table")
     @ResponseBody
     default Result table(@Validated Query query) {
         return getTableService().table(query);
