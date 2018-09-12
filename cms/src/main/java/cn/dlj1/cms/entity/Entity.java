@@ -9,9 +9,9 @@ public interface Entity extends Serializable{
 
     Serializable getId();
 
-    public static interface insert {
+    public static interface add {
     }
 
-    public static interface update {
+    public static interface edit {
     }
 }

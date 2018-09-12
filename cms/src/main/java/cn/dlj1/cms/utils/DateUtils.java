@@ -66,11 +66,19 @@ public class DateUtils {
     /**
      * 获取时间
      *
-     * @param datetimeString
+     * @param string
      * @return
      */
-    public static Date getDateTime(String datetimeString) {
-        return getDateTime(datetimeString, "yyyy-MM-dd HH:mm:ss");
+    public static Date getDateTime(String string) {
+        return getDateTime(string, FORMAT_DATETIME);
+    }
+
+    public static Date getDate(String string) {
+        return getDateTime(string, FORMAT_DATE);
+    }
+
+    public static Date getTime(String string) {
+        return getDateTime(string, FORMAT_TIME);
     }
 
     /**
@@ -132,4 +140,5 @@ public class DateUtils {
         }
         return false;
     }
+
 }

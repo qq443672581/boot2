@@ -11,14 +11,14 @@ import java.lang.annotation.*;
 public @interface Cloumn {
 
     /**
-     * 注释
+     * 列名
      *
      * @return
      */
     String value();
 
     /**
-     * 可被查询 导出的字段
+     * 是否可被查询、导出
      *
      * @return
      */

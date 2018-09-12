@@ -2,7 +2,7 @@ package cn.dlj1.cms.controller;
 
 import cn.dlj1.cms.controller.supports.AttachmentView;
 import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.request.query.Query;
+import cn.dlj1.cms.request.query.ExportQuery;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.ExportService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * 数据导出接口
- *
- *
  */
 public interface ExportController<T extends Entity> extends Controller<T> {
 
@@ -24,7 +22,7 @@ public interface ExportController<T extends Entity> extends Controller<T> {
      *
      * @return
      */
-    @GetMapping("/exportInfos")
+    @GetMapping("/export/infos")
     @ResponseBody
     default Result exportInfos() {
         ExportService service = (ExportService) getService();
@@ -39,9 +37,10 @@ public interface ExportController<T extends Entity> extends Controller<T> {
      */
 
     @GetMapping(value = "/export", produces = AttachmentView.APPLICATION_VIEW_NAME)
-    default String export(HttpServletRequest request, Query query) {
+    default String export(HttpServletRequest request, ExportQuery<T> query) {
         ExportService service = (ExportService) getService();
-        return AttachmentView.view(request, "测试.txt", service.export(query));
+
+        return AttachmentView.view(request, query.getExportFileName(), service.export(query));
     }
 
 }

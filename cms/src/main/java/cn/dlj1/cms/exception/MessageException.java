@@ -5,6 +5,7 @@ package cn.dlj1.cms.exception;
  */
 public class MessageException extends RuntimeException {
 
+    // 异常类
     private Class clazz;
 
     public MessageException() {

@@ -73,7 +73,7 @@ public class Query<T> {
         if (getPager().getCurrent() == 0) {
             getPager().setCurrent(1);
         }
-        if (getPager().getSize() == 0) {
+        if (getPager().getSize() == 0 || getPager().getSize() > 100) {
             getPager().setSize(Pager.DEFAULT_PAGE_SIZE);
         }
         if (getPager().getPageTotal() == 0) {

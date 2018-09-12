@@ -18,5 +18,3 @@ server:
   port: 8080
   tomcat:
     max-threads: 200
-logging:
-#  type-aliases-super-type: java.lang.Object

@@ -4,6 +4,9 @@ import cn.dlj1.cms.entity.annotation.Cloumn;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
 /**
  *
  *
@@ -12,13 +15,15 @@ public class LongEntity implements Entity {
 
     @TableId(type = IdType.AUTO)
     @Cloumn("主键")
-    private long id;
+    @NotNull(groups = edit.class)
+    @Null(groups = add.class)
+    private Long id;
 
     public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

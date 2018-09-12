@@ -41,6 +41,11 @@ public class AttachmentView implements View {
     }
 
     public static String view(HttpServletRequest request, String fileName, byte[] data) {
+        if (null == fileName) {
+            fileName = "导出";
+        }
+        fileName = fileName + ".xls";
+
         request.setAttribute(FILE_NAME, fileName);
         request.setAttribute(FILE_CONTENT_NAME, data);
         return VIEW_NAME;

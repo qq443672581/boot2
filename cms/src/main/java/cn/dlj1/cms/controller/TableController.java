@@ -17,7 +17,7 @@ public interface TableController<T extends Entity> extends Controller<T> {
 
     @GetMapping("/table")
     @ResponseBody
-    default Result table(@Validated Query query) {
+    default Result table(@Validated Query<T> query) {
         return getTableService().table(query);
     }
 

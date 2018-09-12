@@ -15,7 +15,7 @@ public interface AddController<T extends Entity> extends Controller<T> {
 
     @PostMapping("/add")
     @ResponseBody
-    default Result add(@Validated T entity) {
+    default Result add(@Validated(Entity.add.class) T entity) {
         return getActionService().add(entity);
     }
 

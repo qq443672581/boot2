@@ -1,6 +1,7 @@
 package cn.dlj1.cms.response;
 
 import cn.dlj1.cms.request.query.Pager;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class Result {
@@ -41,6 +42,11 @@ public class Result {
             super();
             super.data = object;
         }
+    }
+
+    @JsonIgnore
+    public boolean isSuccess() {
+        return status == 0;
     }
 
     public int getStatus() {

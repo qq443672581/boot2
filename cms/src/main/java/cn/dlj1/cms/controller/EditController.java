@@ -8,15 +8,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 修改接口
- *
- *
  */
 public interface EditController<T extends Entity> extends Controller<T> {
 
 
     @PutMapping("/edit")
     @ResponseBody
-    default Result edit(@Validated T entity) {
+    default Result edit(@Validated(Entity.edit.class) T entity) {
         return getActionService().edit(entity);
     }
 
