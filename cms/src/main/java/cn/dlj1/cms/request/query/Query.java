@@ -73,9 +73,21 @@ public class Query<T> {
         if (getPager().getCurrent() == 0) {
             getPager().setCurrent(1);
         }
-        if (getPager().getSize() == 0 || getPager().getSize() > 100) {
+        if (getPager().getSize() <= 0) {
             getPager().setSize(Pager.DEFAULT_PAGE_SIZE);
         }
+
+        // 判断是不是 导出的query，是不做限制的
+        if (this instanceof ExportQuery) {
+            if (getPager().getSize() > 10000) {
+                getPager().setSize(Pager.DEFAULT_PAGE_SIZE);
+            }
+        } else {
+            if (getPager().getSize() > 100) {
+                getPager().setSize(Pager.DEFAULT_PAGE_SIZE);
+            }
+        }
+
         if (getPager().getPageTotal() == 0) {
             getPager().setPageTotal(1);
         }

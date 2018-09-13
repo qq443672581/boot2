@@ -5,11 +5,15 @@ import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.request.query.ExportQuery;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.ExportUtils;
+import cn.dlj1.cms.utils.DateUtils;
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +39,7 @@ public interface ExportService<T extends Entity> extends TableService<T> {
      *
      * @return
      */
-    default byte[] export(ExportQuery query) {
+    default void export(HttpServletResponse response, ExportQuery query) {
         Result result = table(query);
         List<Map<String, Object>> data = null;
         if (result.isSuccess()) {
@@ -44,17 +48,33 @@ public interface ExportService<T extends Entity> extends TableService<T> {
 
         Map<String, String> map = null;
         try {
-            map = JSON.parseObject(query.getExportFields(), Map.class);
-
+            map = JSON.parseObject(query.getExportFields(), LinkedHashMap.class);
         } catch (Exception e) {
-            throw new MessageException("导出字段格式不正确!");
+            response.setContentType("text/html;charset=utf-8");
+            try {
+                response.getWriter().append("导出字段格式不正确!").close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+        if (null == query.getExportFileName()) {
+            query.setExportFileName("data_" + (DateUtils.getNow().getTime() / 1000));
+        }
+        if (!query.getExportFileName().endsWith(".xls")) {
+            query.setExportFileName(query.getExportFileName() + ".xls");
         }
 
         try {
-            return ExportUtils.export("1", "用户", "备注", map, data);
+            response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(query.getExportFileName(), "UTF-8"));
+            ExportUtils.export(response, "default", "module", "", map, data);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new MessageException("导出失败!");
+            response.setContentType("text/html;charset=utf-8");
+            try {
+                response.getWriter().append("导出失败!").close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }

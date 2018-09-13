@@ -1,5 +1,6 @@
 package cn.dlj1.cms.web.service;
 
+import cn.dlj1.cms.config.GlobalConfig;
 import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.service.ActionService;
 import cn.dlj1.cms.service.ExportService;
@@ -17,6 +18,13 @@ public class UserService implements
 
     @Autowired
     private UserDao dao;
+    @Autowired
+    private GlobalConfig config;
+
+    @Override
+    public GlobalConfig getGlobalConfig() {
+        return config;
+    }
 
     @Override
     public Dao getDao() {

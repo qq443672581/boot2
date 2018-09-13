@@ -1,5 +1,6 @@
 package cn.dlj1.cms.service;
 
+import cn.dlj1.cms.config.GlobalConfig;
 import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.entity.support.EntityUtils;
@@ -9,7 +10,10 @@ import cn.dlj1.cms.service.supports.FieldUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +26,11 @@ import java.util.Map;
 public interface ActionService<T extends Entity> extends Service<T> {
 
     static Log log = LogFactory.getLog(ActionService.class);
+
+    Result UPLOAD_SIZE_TOO_BIG = new Result.Fail("文件太大!");
+
+    @Override
+    GlobalConfig getGlobalConfig();
 
     @Override
     Dao<T> getDao();
@@ -77,6 +86,29 @@ public interface ActionService<T extends Entity> extends Service<T> {
     }
 
     default Result select(String text) {
+
+        return Result.SUCCESS;
+    }
+
+    default Result upload(MultipartFile ele) {
+        GlobalConfig config = getGlobalConfig();
+        Long size = config.getFileSize().get(getModuleClazz().getName());
+
+        if ((null != size && ele.getSize() > size)
+                || ele.getSize() > config.getUploadFileSize()) {
+            return UPLOAD_SIZE_TOO_BIG;
+        }
+
+        System.out.println(ele.getOriginalFilename());
+        System.out.println(ele.getName());
+        System.out.println(ele.getContentType());
+
+        File file = new File("C:\\Users\\Administrator\\Desktop\\xxxxxxxxx.txt");
+        try {
+            ele.transferTo(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return Result.SUCCESS;
     }

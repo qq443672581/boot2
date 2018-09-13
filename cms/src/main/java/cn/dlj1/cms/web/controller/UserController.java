@@ -16,6 +16,7 @@ public class UserController implements
         ViewController<User, Long>,
         AddController<User>,
         EditController<User>,
+        UploadController<User>,
         DeleteController<User, Long>,
         ExportController<User> {
 
