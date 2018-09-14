@@ -1,7 +1,6 @@
 package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.request.query.ExportQuery;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.ExportUtils;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * excel导出
  */
 public interface ExportService<T extends Entity> extends TableService<T> {
 

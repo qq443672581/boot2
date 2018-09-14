@@ -1,7 +1,6 @@
 package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.config.GlobalConfig;
-import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
@@ -14,6 +13,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +28,7 @@ import java.util.Map;
  *
  * @param <T>
  */
+@Transactional
 public interface ActionService<T extends Entity> extends Service<T> {
 
     static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
@@ -35,10 +36,14 @@ public interface ActionService<T extends Entity> extends Service<T> {
     Result UPLOAD_FILE_SIZE_TOO_BIG = new Result.Fail("文件太大!");
     Result UPLOAD_FILE_EXT_NOT_ALLOW = new Result.Fail("不被允许的文件类型!");
 
-    @Override
-    Dao<T> getDao();
-
+    /**
+     * 添加
+     *
+     * @param entity
+     * @return
+     */
     default Result add(T entity) {
+        fill(false, entity);
         int i = getDao().insert(entity);
         if (i == 1) {
             logger.info("保存实体[{}][{}]", getModuleClazz().getName(), entity.getId());
@@ -48,7 +53,15 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
+    /**
+     * 修改 <br>
+     * 根据ID <br>
+     *
+     * @param entity
+     * @return
+     */
     default Result edit(T entity) {
+        fill(false, entity);
         int i = getDao().updateById(entity);
         if (i == 1) {
             return Result.SUCCESS;
@@ -57,11 +70,22 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
-    default void packaging(T entity) {
-
+    /**
+     * 填充 <br>
+     * 处于 add 和 edit 之前 <br>
+     *
+     * @param isEdit
+     * @param entity
+     */
+    default void fill(boolean isEdit, T entity) {
     }
 
-
+    /**
+     * 删除
+     *
+     * @param ids
+     * @return
+     */
     default Result delete(Serializable... ids) {
         if (null == ids || ids.length == 0) {
             return Result.FAIL_NULL;
@@ -74,6 +98,12 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.SUCCESS;
     }
 
+    /**
+     * 展示
+     *
+     * @param id
+     * @return
+     */
     default Result view(Serializable id) {
         QueryWrapper queryWrapper = new QueryWrapper<T>();
         queryWrapper.select(FieldUtils.getSearchFields(getModuleClazz()));
@@ -86,11 +116,24 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return new Result.Success(list.get(0));
     }
 
+    /**
+     * 下拉选择
+     *
+     * @param text
+     * @return
+     */
     default Result select(String text) {
 
         return Result.SUCCESS;
     }
 
+    /**
+     * 文件上传
+     *
+     * @param request
+     * @param ele
+     * @return
+     */
     default Result upload(HttpServletRequest request, MultipartFile ele) {
         GlobalConfig config = getGlobalConfig(request);
         String fileName = ele.getOriginalFilename();

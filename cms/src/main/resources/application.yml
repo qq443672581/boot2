@@ -16,7 +16,7 @@ mybatis-plus:
   configuration:
     call-setters-on-nulls: false
 ec:
-  file-upload-root-path: C:\Users\Administrator\Desktop
+  file-upload-root-path: C:\Users\Administrator\Desktop2
   file-upload-module-size:
     cn.dlj1.cms.web.entity.User: 100
   file-upload-module-ext:

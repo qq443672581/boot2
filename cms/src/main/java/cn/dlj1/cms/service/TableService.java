@@ -14,9 +14,6 @@ import java.util.Map;
 
 public interface TableService<T extends Entity> extends Service<T> {
 
-    @Override
-    Dao<T> getDao();
-
     default Result table(Query<T> query) {
         // 初始化分页
         query.initPager();

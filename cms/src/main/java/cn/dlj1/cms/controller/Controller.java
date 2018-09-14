@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * 控制器顶级接口
- *
- *
  */
 public interface Controller<T extends Entity> extends ControllerSuper<T> {
 
@@ -22,7 +20,7 @@ public interface Controller<T extends Entity> extends ControllerSuper<T> {
     Service getService();
 
     default ActionService getActionService() {
-        Assert.notNull(getService(), "核心服务类不能为空!");
+        Assert.notNull(getService(), "操作服务类不能为空!");
         if (!(getService() instanceof ActionService)) {
             throw new RuntimeException(String.format("服务[%s]没有实现操作服务类", getService()));
         }

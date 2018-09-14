@@ -7,9 +7,6 @@ import cn.dlj1.cms.response.Result;
 
 public interface TreeService<T extends Entity> extends Service<T> {
 
-    @Override
-    Dao<T> getDao();
-
     default Result tree(Query query) {
 
         return Result.SUCCESS;

@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class GlobalConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (StringUtils.isEmpty(fileUploadRootPath)) {
+        if (StringUtils.isEmpty(fileUploadRootPath) || !new File(fileUploadRootPath).exists()) {
             logger.warn("file upload root path not exist, to setting [ec.file-upload-root-path]");
         }
     }
