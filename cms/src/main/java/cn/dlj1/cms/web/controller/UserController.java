@@ -25,7 +25,7 @@ public class UserController implements
 
     @Override
     public Service getService() {
-        return userService;
+        return null;
     }
 
 

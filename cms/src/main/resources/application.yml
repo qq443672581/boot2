@@ -9,15 +9,18 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     locale: zh_CN
     time-zone: GMT+8
-
+  aop:
+    proxy-target-class: true
 mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   configuration:
     call-setters-on-nulls: false
-server:
-  port: 8080
-  tomcat:
-    max-threads: 200
-
+ec:
+  file-upload-root-path: C:\Users\Administrator\Desktop
+  file-upload-module-size:
+    cn.dlj1.cms.web.entity.User: 100
+  file-upload-module-ext:
+    cn.dlj1.cms.web.entity.User:
+      - txt
 
 

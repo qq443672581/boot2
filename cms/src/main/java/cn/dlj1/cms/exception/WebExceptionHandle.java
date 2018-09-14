@@ -24,7 +24,9 @@ public class WebExceptionHandle {
     public Result bindException(MessageException exception) {
         String message = exception.getMessage();
         Class clazz = exception.getClazz();
-        log.error(String.format("[%s][%s]", clazz.getName(), message));
+        String clazzName = null == clazz ? "" : clazz.getName();
+
+        log.error(String.format("[%s][%s]", clazzName, message));
         return new Result.Fail(message);
     }
 

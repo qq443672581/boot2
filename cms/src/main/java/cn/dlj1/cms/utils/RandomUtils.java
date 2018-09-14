@@ -52,4 +52,8 @@ public class RandomUtils {
         return (long) ((Math.random() * 9 + 1) * Math.pow(10, --length));
     }
 
+    public static String getFileName(String ext) {
+        return getUUID() + "." + ext;
+    }
+
 }

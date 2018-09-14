@@ -1,5 +1,9 @@
 package cn.dlj1.cms.config;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -7,11 +11,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 全局配置
+ * Global Config <br>
+ * <br>
+ * <br>
  */
 @Component
 @ConfigurationProperties(prefix = "ec")
-public class GlobalConfig {
+public class GlobalConfig implements CommandLineRunner {
+
+    private static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
+
+    @Override
+    public void run(String... args) throws Exception {
+        if (StringUtils.isEmpty(fileUploadRootPath)) {
+            logger.warn("file upload root path not exist, to setting [ec.file-upload-root-path]");
+        }
+    }
 
     /**
      * Application Name
@@ -19,25 +34,37 @@ public class GlobalConfig {
     private String name = "EC 管理系统";
 
     /**
-     * default upload file size
+     * upload file default save path
+     */
+    private String fileUploadRootPath;
+
+    /**
+     * upload file size max size <br>
      * default 5M
      */
-    private long uploadFileSize = 1000 * 1000 * 5;
+    private long fileUploadSize = 1000 * 1000 * 5;
 
     /**
-     * 上传文件默认格式
+     * default upload file format <br>
+     * array
      */
-    private String[] uploadFileExt = {"jpg", "png", "gif", "txt", "html"};
+    private String[] fileUploadExt = {"jpg", "png", "gif", "txt", "js", "html"};
 
     /**
-     * 模块可配置文件上传大小
+     * module upload file size <br>
+     * key:     module entity real packages <br>
+     * value:   unit,byte <br>
+     * eg : <br>
+     * com.xxx.entity.Test : 100000
      */
-    private Map<String, Long> fileSize = new HashMap<>();
+    private Map<String, Long> fileUploadModuleSize = new HashMap<>();
 
     /**
-     * 模块可配置文件上传格式
+     * module upload file format <br>
+     * key:     module entity real packages <br>
+     * value:   string array <br>
      */
-    private Map<String, String[]> fileExt = new HashMap<>();
+    private Map<String, String[]> fileUploadModuleExt = new HashMap<>();
 
     public String getName() {
         return name;
@@ -47,35 +74,43 @@ public class GlobalConfig {
         this.name = name;
     }
 
-    public long getUploadFileSize() {
-        return uploadFileSize;
+    public String getFileUploadRootPath() {
+        return fileUploadRootPath;
     }
 
-    public void setUploadFileSize(long uploadFileSize) {
-        this.uploadFileSize = uploadFileSize;
+    public void setFileUploadRootPath(String fileUploadRootPath) {
+        this.fileUploadRootPath = fileUploadRootPath;
     }
 
-    public String[] getUploadFileExt() {
-        return uploadFileExt;
+    public long getFileUploadSize() {
+        return fileUploadSize;
     }
 
-    public void setUploadFileExt(String[] uploadFileExt) {
-        this.uploadFileExt = uploadFileExt;
+    public void setFileUploadSize(long fileUploadSize) {
+        this.fileUploadSize = fileUploadSize;
     }
 
-    public Map<String, Long> getFileSize() {
-        return fileSize;
+    public String[] getFileUploadExt() {
+        return fileUploadExt;
     }
 
-    public void setFileSize(Map<String, Long> fileSize) {
-        this.fileSize = fileSize;
+    public void setFileUploadExt(String[] fileUploadExt) {
+        this.fileUploadExt = fileUploadExt;
     }
 
-    public Map<String, String[]> getFileExt() {
-        return fileExt;
+    public Map<String, Long> getFileUploadModuleSize() {
+        return fileUploadModuleSize;
     }
 
-    public void setFileExt(Map<String, String[]> fileExt) {
-        this.fileExt = fileExt;
+    public void setFileUploadModuleSize(Map<String, Long> fileUploadModuleSize) {
+        this.fileUploadModuleSize = fileUploadModuleSize;
+    }
+
+    public Map<String, String[]> getFileUploadModuleExt() {
+        return fileUploadModuleExt;
+    }
+
+    public void setFileUploadModuleExt(Map<String, String[]> fileUploadModuleExt) {
+        this.fileUploadModuleExt = fileUploadModuleExt;
     }
 }

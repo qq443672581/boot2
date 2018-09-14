@@ -7,11 +7,16 @@ import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.FieldUtils;
+import cn.dlj1.cms.utils.DateUtils;
+import cn.dlj1.cms.utils.RandomUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,12 +30,10 @@ import java.util.Map;
  */
 public interface ActionService<T extends Entity> extends Service<T> {
 
-    static Log log = LogFactory.getLog(ActionService.class);
+    static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
 
-    Result UPLOAD_SIZE_TOO_BIG = new Result.Fail("文件太大!");
-
-    @Override
-    GlobalConfig getGlobalConfig();
+    Result UPLOAD_FILE_SIZE_TOO_BIG = new Result.Fail("文件太大!");
+    Result UPLOAD_FILE_EXT_NOT_ALLOW = new Result.Fail("不被允许的文件类型!");
 
     @Override
     Dao<T> getDao();
@@ -38,10 +41,10 @@ public interface ActionService<T extends Entity> extends Service<T> {
     default Result add(T entity) {
         int i = getDao().insert(entity);
         if (i == 1) {
-            log.info(String.format("保存实体[%s][%s]", getModuleClazz().getName(), entity.getId()));
+            logger.info("保存实体[{}][{}]", getModuleClazz().getName(), entity.getId());
             return new Result.Success(entity.getId());
         }
-        log.error(String.format("保存实体[%s]时错误", getModuleClazz().getName()));
+        logger.error("保存实体[{}]时错误", getModuleClazz().getName());
         return Result.FAIL;
     }
 
@@ -50,7 +53,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
         if (i == 1) {
             return Result.SUCCESS;
         }
-        log.error(String.format("修改实体[%s]时错误", getModuleClazz().getName()));
+        logger.error("修改实体[{}]时错误", getModuleClazz().getName());
         return Result.FAIL;
     }
 
@@ -69,8 +72,6 @@ public interface ActionService<T extends Entity> extends Service<T> {
             }
         }
         return Result.SUCCESS;
-//        log.error(String.format("删除实体[%s]时错误", getModuleClazz().getName() ));
-//        return Result.FAIL;
     }
 
     default Result view(Serializable id) {
@@ -90,27 +91,51 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.SUCCESS;
     }
 
-    default Result upload(MultipartFile ele) {
-        GlobalConfig config = getGlobalConfig();
-        Long size = config.getFileSize().get(getModuleClazz().getName());
+    default Result upload(HttpServletRequest request, MultipartFile ele) {
+        GlobalConfig config = getGlobalConfig(request);
+        String fileName = ele.getOriginalFilename();
+        String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-        if ((null != size && ele.getSize() > size)
-                || ele.getSize() > config.getUploadFileSize()) {
-            return UPLOAD_SIZE_TOO_BIG;
+        // 优先模块自定义的配置
+        // 大小限制
+        Long moduleSzie = config.getFileUploadModuleSize().get(getModuleClazz().getName());
+        if ((null == moduleSzie && ele.getSize() > config.getFileUploadSize())
+                || ((null != moduleSzie && ele.getSize() > moduleSzie))
+                ) {
+            return UPLOAD_FILE_SIZE_TOO_BIG;
+        }
+        // 格式限制
+        String[] moduleExts = config.getFileUploadModuleExt().get(getModuleClazz().getName());
+        if ((null == moduleExts && !ArrayUtils.contains(config.getFileUploadExt(), fileExt))
+                || ((null != moduleExts && !ArrayUtils.contains(moduleExts, fileExt)))
+                ) {
+            return UPLOAD_FILE_EXT_NOT_ALLOW;
+        }
+        // root 路径
+        if (StringUtils.isEmpty(config.getFileUploadRootPath())) {
+            return Result.FAIL;
         }
 
-        System.out.println(ele.getOriginalFilename());
-        System.out.println(ele.getName());
-        System.out.println(ele.getContentType());
+        // 创建文件夹
+        String dirPath = DateUtils.getDateString(DateUtils.getNow(),
+                File.separator + "yyyyMM" + File.separator + "dd");
+        File file = new File(config.getFileUploadRootPath() + dirPath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
-        File file = new File("C:\\Users\\Administrator\\Desktop\\xxxxxxxxx.txt");
+        // 文件相对路径
+        String fileRelationPath = dirPath + File.separator + RandomUtils.getFileName(fileExt);
+        file = new File(config.getFileUploadRootPath() + fileRelationPath);
         try {
             ele.transferTo(file);
+            logger.info("文件上传：模块[{}]上传文件[{}]到[{}]", getModuleClazz().getName(), fileName, file.getAbsolutePath());
+            return new Result.Success(fileRelationPath);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return Result.SUCCESS;
+        return Result.FAIL;
     }
 
 }

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 上传文件接口
  * <br>
@@ -16,9 +18,9 @@ public interface UploadController<T extends Entity> extends Controller<T> {
 
     @PostMapping("/upload")
     @ResponseBody
-    default Result upload(@RequestParam("ele") MultipartFile ele) {
+    default Result upload(HttpServletRequest request, @RequestParam(value = "ele") MultipartFile ele) {
 
-        return getActionService().upload(ele);
+        return getActionService().upload(request, ele);
     }
 
 }

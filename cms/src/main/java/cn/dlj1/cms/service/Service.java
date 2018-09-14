@@ -3,7 +3,9 @@ package cn.dlj1.cms.service;
 import cn.dlj1.cms.config.GlobalConfig;
 import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.entity.Entity;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.ParameterizedType;
 
 /**
@@ -16,7 +18,9 @@ public interface Service<T extends Entity> {
      *
      * @return
      */
-    GlobalConfig getGlobalConfig();
+    default GlobalConfig getGlobalConfig(HttpServletRequest request) {
+        return WebApplicationContextUtils.getWebApplicationContext(request.getServletContext()).getBean(GlobalConfig.class);
+    }
 
     /**
      * 获取Dao
