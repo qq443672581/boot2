@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 /**
@@ -19,8 +19,8 @@ public interface DeleteController<T extends Entity,K extends Serializable> exten
 
     @DeleteMapping("/delete")
     @ResponseBody
-    default Result add(@Validated @NotNull K... ids) {
-        return getActionService().delete(ids);
+    default Result delete(@Validated @NotBlank K... id) {
+        return getActionService().delete(id);
     }
 
 }

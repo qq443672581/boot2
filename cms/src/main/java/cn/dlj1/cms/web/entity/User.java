@@ -2,19 +2,22 @@ package cn.dlj1.cms.web.entity;
 
 import cn.dlj1.cms.entity.LongEntity;
 import cn.dlj1.cms.entity.annotation.Cloumn;
+import cn.dlj1.cms.entity.annotation.SelectModule;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.sql.Time;
 
 /**
  * 用户表
- *
  */
-@TableName("user")
+@TableName("user_")
+@SelectModule(text = "name", value = "id")
 public class User extends LongEntity {
 
+    @NotBlank(groups = add.class)
     @Cloumn("姓名")
     private String name;
 

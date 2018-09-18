@@ -1,5 +1,7 @@
 package cn.dlj1.cms.entity.annotation;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.lang.annotation.*;
 
 /**

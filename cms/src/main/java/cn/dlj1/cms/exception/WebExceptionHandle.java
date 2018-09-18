@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +50,19 @@ public class WebExceptionHandle {
     public Result bindException(BindException exception) {
         String msg = exception.getFieldError().getDefaultMessage();
         log.error(String.format("数据绑定异常:[%s]", msg));
-        msg = String.format("字段[%s]数据格式不正确:%s!", exception.getFieldError().getField(), msg);
+        if (msg.length() > 20) {
+            // 排除英文错误
+            msg = "数据格式不正确!";
+        }
+        msg = String.format("字段[%s]:%s!", exception.getFieldError().getField(), msg);
+        return new Result.Fail(msg);
+    }
+
+    // 数据绑定异常
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseBody
+    public Result methodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        String msg = exception.getMessage();
         return new Result.Fail(msg);
     }
 

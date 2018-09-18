@@ -2,12 +2,13 @@ package cn.dlj1.cms.service;
 
 import cn.dlj1.cms.config.GlobalConfig;
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.entity.annotation.SelectModule;
+import cn.dlj1.cms.entity.annotation.SelectModuleUtils;
 import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.FieldUtils;
-import cn.dlj1.cms.utils.DateUtils;
-import cn.dlj1.cms.utils.RandomUtils;
+import cn.dlj1.cms.utils.FileUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
 
     Result UPLOAD_FILE_SIZE_TOO_BIG = new Result.Fail("文件太大!");
     Result UPLOAD_FILE_EXT_NOT_ALLOW = new Result.Fail("不被允许的文件类型!");
+    Result SELECT_MODULE_NOT_CONFIG = new Result.Fail("下拉模块未配置!");
 
     /**
      * 添加
@@ -111,7 +113,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
 
         List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
         if (null == list || list.size() != 1) {
-            return new Result.Fail("数据不存在或存在多条!");
+            return new Result.Fail("数据不存在!");
         }
         return new Result.Success(list.get(0));
     }
@@ -123,8 +125,19 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @return
      */
     default Result select(String text) {
+        SelectModule selectModule = SelectModuleUtils.get(getModuleClazz());
+        if (null == selectModule) {
+            logger.error("Module[{}] is implements SelectController，but not write @SelectModule on model class", getModuleClazz().getName());
+            return SELECT_MODULE_NOT_CONFIG;
+        }
+        String textField = selectModule.text();
+        String valueField = selectModule.value();
 
-        return Result.SUCCESS;
+        QueryWrapper<T> wrapper = new QueryWrapper<>();
+        wrapper.select(textField + " as text", valueField + " as value");
+        wrapper.like(textField, text);
+
+        return new Result.Success(getDao().selectMaps(wrapper));
     }
 
     /**
@@ -141,41 +154,37 @@ public interface ActionService<T extends Entity> extends Service<T> {
 
         // 优先模块自定义的配置
         // 大小限制
-        Long moduleSzie = config.getFileUploadModuleSize().get(getModuleClazz().getName());
-        if ((null == moduleSzie && ele.getSize() > config.getFileUploadSize())
+        Long moduleSzie = config.getFileUpload().getModuleSize().get(getModuleClazz().getName());
+        if ((null == moduleSzie && ele.getSize() > config.getFileUpload().getSize())
                 || ((null != moduleSzie && ele.getSize() > moduleSzie))
                 ) {
             return UPLOAD_FILE_SIZE_TOO_BIG;
         }
         // 格式限制
-        String[] moduleExts = config.getFileUploadModuleExt().get(getModuleClazz().getName());
-        if ((null == moduleExts && !ArrayUtils.contains(config.getFileUploadExt(), fileExt))
+        String[] moduleExts = config.getFileUpload().getModuleExt().get(getModuleClazz().getName());
+        if ((null == moduleExts && !ArrayUtils.contains(config.getFileUpload().getExt(), fileExt))
                 || ((null != moduleExts && !ArrayUtils.contains(moduleExts, fileExt)))
                 ) {
             return UPLOAD_FILE_EXT_NOT_ALLOW;
         }
         // root 路径
-        if (StringUtils.isEmpty(config.getFileUploadRootPath())) {
+        if (StringUtils.isEmpty(config.getFileUpload().getRootPath())) {
+            logger.error("系统默认文件上传路径未配置[ec.file-upload.root-path]");
             return Result.FAIL;
         }
 
         // 创建文件夹
-        String dirPath = DateUtils.getDateString(DateUtils.getNow(),
-                File.separator + "yyyyMM" + File.separator + "dd");
-        File file = new File(config.getFileUploadRootPath() + dirPath);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-
         // 文件相对路径
-        String fileRelationPath = dirPath + File.separator + RandomUtils.getFileName(fileExt);
-        file = new File(config.getFileUploadRootPath() + fileRelationPath);
+        String fileRelationPath = FileUtils.getFileRelationPath(config.getFileUpload().getRootPath(), fileExt);
+
+        File file = new File(config.getFileUpload().getRootPath() + fileRelationPath);
         try {
             ele.transferTo(file);
             logger.info("文件上传：模块[{}]上传文件[{}]到[{}]", getModuleClazz().getName(), fileName, file.getAbsolutePath());
             return new Result.Success(fileRelationPath);
         } catch (IOException e) {
             e.printStackTrace();
+            logger.error("文件上传失败,[{}]", e.getMessage());
         }
 
         return Result.FAIL;

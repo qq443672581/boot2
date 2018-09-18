@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 模块主页面接口
- *
- *
  */
 public interface MainController<T extends Entity> extends Controller<T> {
 
@@ -26,7 +24,7 @@ public interface MainController<T extends Entity> extends Controller<T> {
     @RequestMapping(value = {"", "main"}, method = RequestMethod.GET)
     @ResponseBody
     default Result mainView() {
-        return Result.SUCCESS;
+        return new Result.Success(String.format("module:%s", getModuleClazz().getSimpleName()));
     }
 
 }

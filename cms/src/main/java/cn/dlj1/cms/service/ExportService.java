@@ -53,6 +53,7 @@ public interface ExportService<T extends Entity> extends TableService<T> {
             response.setContentType("text/html;charset=utf-8");
             try {
                 response.getWriter().append("导出字段格式不正确!").close();
+                return;
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

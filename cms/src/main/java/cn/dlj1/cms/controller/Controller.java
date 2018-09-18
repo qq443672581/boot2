@@ -6,10 +6,12 @@ import cn.dlj1.cms.service.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.lang.reflect.ParameterizedType;
+
 /**
  * 控制器顶级接口
  */
-public interface Controller<T extends Entity> extends ControllerSuper<T> {
+public interface Controller<T extends Entity> {
 
     /**
      * 获取服务实现类
@@ -35,15 +37,23 @@ public interface Controller<T extends Entity> extends ControllerSuper<T> {
      */
     default String getModulePath() {
         RequestMapping rm = this.getClass().getAnnotation(RequestMapping.class);
-        String path = "";
         if (null != rm) {
             String[] values = rm.value();
-            if (null != values && values.length > 0) {
-                path = values[0] + "/";
+            if (null == values || values.length == 0) {
+                return "";
             }
+            return values[0] + "/";
         }
-        return path;
+        return "";
     }
 
+    /**
+     * 获取模块的泛型
+     *
+     * @return
+     */
+    default Class<T> getModuleClazz() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
+    }
 
 }

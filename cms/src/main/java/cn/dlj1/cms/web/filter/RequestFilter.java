@@ -21,7 +21,7 @@ public class RequestFilter implements Filter {
         long time = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
         if (log.isDebugEnabled()) {
-            log.debug("请求响应时间:" + (System.currentTimeMillis() - time));
+            log.debug("请求响应时间:" + (System.currentTimeMillis() - time) + "ms");
         }
 
     }

@@ -13,7 +13,7 @@ public class Result {
     private int status = 0;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String msg;
+    private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object data;
@@ -27,16 +27,17 @@ public class Result {
     public Result() {
     }
 
-    public Result(String msg) {
+    public Result(String message) {
         status = -1;
-        this.msg = msg;
+        this.message = message;
     }
 
     public static class Fail extends Result {
-        public Fail(String msg) {
-            super(msg);
+        public Fail(String message) {
+            super(message);
         }
     }
+
     public static class Success extends Result {
         public Success(Object object) {
             super();
@@ -57,12 +58,12 @@ public class Result {
         this.status = status;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public Object getData() {

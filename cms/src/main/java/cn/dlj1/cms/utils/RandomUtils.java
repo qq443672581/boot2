@@ -1,7 +1,5 @@
 package cn.dlj1.cms.utils;
 
-import sun.misc.BASE64Encoder;
-
 import java.util.UUID;
 
 /**
@@ -52,19 +50,6 @@ public class RandomUtils {
             length = 16;
         }
         return (long) ((Math.random() * 9 + 1) * Math.pow(10, --length));
-    }
-
-    /**
-     * 获取一个文件名
-     * 保证在一天内不重复
-     *
-     * @param ext
-     * @return
-     */
-    public static String getFileName(String ext) {
-        final BASE64Encoder encoder = new BASE64Encoder();
-        String base = encoder.encode((getNumber(3) + DateUtils.getDateString(DateUtils.getNow(), "HHmmssSSS")).getBytes());
-        return base + "." + ext;
     }
 
 }

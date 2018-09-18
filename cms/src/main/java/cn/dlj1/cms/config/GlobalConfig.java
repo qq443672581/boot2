@@ -7,7 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,48 +23,104 @@ public class GlobalConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (StringUtils.isEmpty(fileUploadRootPath) || !new File(fileUploadRootPath).exists()) {
-            logger.warn("file upload root path not exist, to setting [ec.file-upload-root-path]");
+        if (StringUtils.isEmpty(fileUpload.getRootPath())
+                || !new java.io.File(fileUpload.getRootPath()).exists()) {
+            logger.warn("file upload root path not exist, to setting [ec.file-upload.root-path]");
         }
     }
 
     /**
      * Application Name
      */
-    private String name = "EC 管理系统";
+    private String name = "EC Content Manger System";
 
     /**
-     * upload file default save path
+     * file upload config
      */
-    private String fileUploadRootPath;
+    private File fileUpload = new File();
 
-    /**
-     * upload file size max size <br>
-     * default 5M
-     */
-    private long fileUploadSize = 1000 * 1000 * 5;
+    public static class File {
+        /**
+         * upload file default save path
+         */
+        private String rootPath;
 
-    /**
-     * default upload file format <br>
-     * array
-     */
-    private String[] fileUploadExt = {"jpg", "png", "gif", "txt", "js", "html"};
+        /**
+         * upload file size max size <br>
+         * default 5M
+         */
+        private long size = 1000 * 1000 * 5;
 
-    /**
-     * module upload file size <br>
-     * key:     module entity real packages <br>
-     * value:   unit,byte <br>
-     * eg : <br>
-     * com.xxx.entity.Test : 100000
-     */
-    private Map<String, Long> fileUploadModuleSize = new HashMap<>();
+        /**
+         * default upload file format <br>
+         * array
+         */
+        private String[] ext = {"jpg", "png", "gif", "txt", "js", "html"};
 
-    /**
-     * module upload file format <br>
-     * key:     module entity real packages <br>
-     * value:   string array <br>
-     */
-    private Map<String, String[]> fileUploadModuleExt = new HashMap<>();
+        /**
+         * module upload file size <br>
+         * key:     module entity real packages <br>
+         * value:   unit,byte <br>
+         * eg : <br>
+         * com.xxx.entity.Test : 100000
+         */
+        private Map<String, Long> moduleSize = new HashMap<>();
+
+        /**
+         * module upload file format <br>
+         * key:     module entity real packages <br>
+         * value:   string array <br>
+         */
+        private Map<String, String[]> moduleExt = new HashMap<>();
+
+        public String getRootPath() {
+            return rootPath;
+        }
+
+        public void setRootPath(String rootPath) {
+            this.rootPath = rootPath;
+        }
+
+        public long getSize() {
+            return size;
+        }
+
+        public void setSize(long size) {
+            this.size = size;
+        }
+
+        public String[] getExt() {
+            return ext;
+        }
+
+        public void setExt(String[] ext) {
+            this.ext = ext;
+        }
+
+        public Map<String, Long> getModuleSize() {
+            return moduleSize;
+        }
+
+        public void setModuleSize(Map<String, Long> moduleSize) {
+            this.moduleSize = moduleSize;
+        }
+
+        public Map<String, String[]> getModuleExt() {
+            return moduleExt;
+        }
+
+        public void setModuleExt(Map<String, String[]> moduleExt) {
+            this.moduleExt = moduleExt;
+        }
+    }
+
+    public void setFileUpload(File fileUpload) {
+        this.fileUpload = fileUpload;
+    }
+
+    public File getFileUpload() {
+        return fileUpload;
+    }
 
     public String getName() {
         return name;
@@ -75,43 +130,4 @@ public class GlobalConfig implements CommandLineRunner {
         this.name = name;
     }
 
-    public String getFileUploadRootPath() {
-        return fileUploadRootPath;
-    }
-
-    public void setFileUploadRootPath(String fileUploadRootPath) {
-        this.fileUploadRootPath = fileUploadRootPath;
-    }
-
-    public long getFileUploadSize() {
-        return fileUploadSize;
-    }
-
-    public void setFileUploadSize(long fileUploadSize) {
-        this.fileUploadSize = fileUploadSize;
-    }
-
-    public String[] getFileUploadExt() {
-        return fileUploadExt;
-    }
-
-    public void setFileUploadExt(String[] fileUploadExt) {
-        this.fileUploadExt = fileUploadExt;
-    }
-
-    public Map<String, Long> getFileUploadModuleSize() {
-        return fileUploadModuleSize;
-    }
-
-    public void setFileUploadModuleSize(Map<String, Long> fileUploadModuleSize) {
-        this.fileUploadModuleSize = fileUploadModuleSize;
-    }
-
-    public Map<String, String[]> getFileUploadModuleExt() {
-        return fileUploadModuleExt;
-    }
-
-    public void setFileUploadModuleExt(Map<String, String[]> fileUploadModuleExt) {
-        this.fileUploadModuleExt = fileUploadModuleExt;
-    }
 }
