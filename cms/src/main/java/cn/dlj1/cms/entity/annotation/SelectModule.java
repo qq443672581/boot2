@@ -14,4 +14,7 @@ public @interface SelectModule {
 
     String value();
 
+    String order() default "";
+
+    boolean asc() default true;
 }

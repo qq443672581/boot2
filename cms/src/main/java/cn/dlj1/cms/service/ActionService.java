@@ -10,6 +10,8 @@ import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.FieldUtils;
 import cn.dlj1.cms.utils.FileUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -127,17 +129,21 @@ public interface ActionService<T extends Entity> extends Service<T> {
     default Result select(String text) {
         SelectModule selectModule = SelectModuleUtils.get(getModuleClazz());
         if (null == selectModule) {
-            logger.error("Module[{}] is implements SelectController，but not write @SelectModule on model class", getModuleClazz().getName());
+            logger.error("模块[{}] 虽然实现了 SelectController，但是没有把 @SelectModule 注解标注在模块实体", getModuleClazz().getName());
             return SELECT_MODULE_NOT_CONFIG;
         }
         String textField = selectModule.text();
         String valueField = selectModule.value();
+        String field = selectModule.order();
+        boolean asc = selectModule.asc();
 
         QueryWrapper<T> wrapper = new QueryWrapper<>();
         wrapper.select(textField + " as text", valueField + " as value");
         wrapper.like(textField, text);
+        wrapper.orderBy(true, asc, "".equals(field) ? valueField : field);
+        IPage<Map<String, Object>> page = getDao().selectMapsPage(new Page<T>(1, 1000), wrapper);
 
-        return new Result.Success(getDao().selectMaps(wrapper));
+        return new Result.Success(page.getRecords());
     }
 
     /**

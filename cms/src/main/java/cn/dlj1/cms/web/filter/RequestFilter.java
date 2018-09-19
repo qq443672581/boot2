@@ -17,6 +17,7 @@ public class RequestFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        servletResponse.setCharacterEncoding("UTF-8");
 
         long time = System.currentTimeMillis();
         filterChain.doFilter(servletRequest, servletResponse);
