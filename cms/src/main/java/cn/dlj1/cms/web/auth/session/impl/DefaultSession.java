@@ -23,6 +23,9 @@ public class DefaultSession implements Session {
 
     @Override
     public Object getAttribute(String key) {
+        if (null == attributes) {
+            return null;
+        }
         return attributes.get(key);
     }
 

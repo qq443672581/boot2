@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.dlj1.cms.web.dao.sys.auth.AdminDao">
+
+    <resultMap id="mp" type="cn.dlj1.cms.web.entity.sys.auth.Admin">
+        <id column="id" property="id"/>
+        <result column="passport" property="passport"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="state" property="state"/>
+
+        <collection property="roles" javaType="java.util.ArrayList"
+                    ofType="cn.dlj1.cms.web.entity.sys.auth.Role">
+            <id column="roleId" property="id"/>
+            <result column="roleName" property="name" />
+            <result column="roleState" property="state" />
+        </collection>
+    </resultMap>
+    <select id="selectOne" resultMap="mp">
+        select a.*,r.id roleId,r.name roleName,r.state roleState from sys_admin a
+          left join sys_admin_role ar on a.id=ar.admin_id
+          left join sys_role r on ar.role_id=r.id
+        where a.${ew.sqlSegment}
+    </select>
+
+</mapper>

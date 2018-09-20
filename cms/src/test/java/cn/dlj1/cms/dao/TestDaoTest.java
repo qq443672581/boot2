@@ -1,7 +1,7 @@
 package cn.dlj1.cms.dao;
 
-import cn.dlj1.cms.web.dao.UserDao;
-import cn.dlj1.cms.web.entity.User;
+import cn.dlj1.cms.web.dao.sys.auth.AdminDao;
+import cn.dlj1.cms.web.entity.sys.auth.Admin;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.junit.Test;
@@ -17,14 +17,14 @@ import java.util.List;
 public class TestDaoTest {
 
     @Autowired
-    private UserDao dao;
+    private AdminDao dao;
 
     @Test
     public void testSelect() {
         System.out.println(("----- selectAll method test ------"));
-        Wrapper<User> q = new QueryWrapper<User>().eq("id", 1);
+        Wrapper<Admin> q = new QueryWrapper<Admin>().eq("id", 1);
 
-        List<User> userList = dao.selectList(q);
+        List<Admin> userList = dao.selectList(q);
         userList.forEach(System.out::println);
     }
 

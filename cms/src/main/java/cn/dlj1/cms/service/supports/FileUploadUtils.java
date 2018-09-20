@@ -1,10 +1,12 @@
-package cn.dlj1.cms.utils;
+package cn.dlj1.cms.service.supports;
 
+import cn.dlj1.cms.utils.DateUtils;
+import cn.dlj1.cms.utils.RandomUtils;
 import sun.misc.BASE64Encoder;
 
 import java.io.File;
 
-public class FileUtils {
+public class FileUploadUtils {
 
     /**
      * 获取一个文件名

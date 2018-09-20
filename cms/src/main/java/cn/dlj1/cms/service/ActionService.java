@@ -8,7 +8,7 @@ import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.service.supports.FieldUtils;
-import cn.dlj1.cms.utils.FileUtils;
+import cn.dlj1.cms.service.supports.FileUploadUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -113,11 +113,15 @@ public interface ActionService<T extends Entity> extends Service<T> {
         queryWrapper.select(FieldUtils.getSearchFields(getModuleClazz()));
         queryWrapper.eq(EntityUtils.getEntityPk(getModuleClazz()), id);
 
-        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
-        if (null == list || list.size() != 1) {
-            return new Result.Fail("数据不存在!");
-        }
-        return new Result.Success(list.get(0));
+//        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
+        Entity t = getDao().selectOne(queryWrapper);
+
+
+//        if (null == list || list.size() != 1) {
+//            return new Result.Fail("数据不存在!");
+//        }
+//        return new Result.Success(list.get(0));
+        return new Result.Success(t);
     }
 
     /**
@@ -181,7 +185,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
 
         // 创建文件夹
         // 文件相对路径
-        String fileRelationPath = FileUtils.getFileRelationPath(config.getFileUpload().getRootPath(), fileExt);
+        String fileRelationPath = FileUploadUtils.getFileRelationPath(config.getFileUpload().getRootPath(), fileExt);
 
         File file = new File(config.getFileUpload().getRootPath() + fileRelationPath);
         try {

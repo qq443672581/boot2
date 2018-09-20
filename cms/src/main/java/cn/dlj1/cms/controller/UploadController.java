@@ -2,6 +2,7 @@ package cn.dlj1.cms.controller;
 
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.response.Result;
+import cn.dlj1.cms.web.auth.annotation.Menu;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,7 @@ public interface UploadController<T extends Entity> extends Controller<T> {
 
     @PostMapping("/upload")
     @ResponseBody
+    @Menu(value = "上传", key = "upload")
     default Result upload(HttpServletRequest request, @RequestParam(value = "ele") MultipartFile ele) {
 
         return getActionService().upload(request, ele);

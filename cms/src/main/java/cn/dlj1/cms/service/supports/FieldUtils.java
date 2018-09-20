@@ -4,8 +4,10 @@ import cn.dlj1.cms.entity.annotation.CloumnUtils;
 import cn.dlj1.cms.entity.annotation.TableFieldUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.utils.ClassUtils;
+import com.baomidou.mybatisplus.annotation.TableField;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +33,14 @@ public class FieldUtils {
         Field[] fields = ClassUtils.getFields(clazz);
         List<String> fs = new ArrayList<>();
         for (int i = 0; i < fields.length; i++) {
-            if (CloumnUtils.isSearch(fields[i])) {
-                fs.add(TableFieldUtils.getName(fields[i]));
+            if (!CloumnUtils.isSearch(fields[i])
+                    || fields[i].getModifiers() == Modifier.TRANSIENT
+                    || null == fields[i].getAnnotation(TableField.class)
+                    || !fields[i].getAnnotation(TableField.class).exist()
+                    ) {
+                continue;
             }
+            fs.add(TableFieldUtils.getName(fields[i]));
         }
         String[] s = new String[fs.size()];
         fs.toArray(s);

@@ -13,7 +13,7 @@ spring:
   application:
     name: CMS
 mybatis-plus:
-  mapper-locations: classpath*:mapper/*.xml
+  mapper-locations: classpath*:mapper/**/*.xml
   configuration:
     call-setters-on-nulls: false
 ec:
