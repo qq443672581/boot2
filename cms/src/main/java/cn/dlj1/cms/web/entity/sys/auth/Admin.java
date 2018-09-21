@@ -1,9 +1,16 @@
 package cn.dlj1.cms.web.entity.sys.auth;
 
+import cn.dlj1.cms.dao.annotation.MoreToMore;
+import cn.dlj1.cms.dao.annotation.OneToMore;
+import cn.dlj1.cms.dao.annotation.OneToOne;
 import cn.dlj1.cms.entity.LongEntity;
 import cn.dlj1.cms.entity.annotation.Cloumn;
 import cn.dlj1.cms.entity.annotation.SelectModule;
 import cn.dlj1.cms.entity.annotation.Table;
+import cn.dlj1.cms.web.dao.sys.auth.AdminExtendDao;
+import cn.dlj1.cms.web.dao.sys.auth.AdminUuidDao;
+import cn.dlj1.cms.web.dao.sys.auth.AdminRoleDao;
+import cn.dlj1.cms.web.dao.sys.auth.RoleDao;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.hibernate.validator.constraints.Length;
 
@@ -33,11 +40,20 @@ public class Admin extends LongEntity {
     @Cloumn("姓名")
     private String name;
 
-    @Cloumn("角色")
-    private transient List<Role> roles;
-
     @Cloumn("可用")
     private Integer state;
+
+    @Cloumn("角色")
+    @MoreToMore(mapper = RoleDao.class, middleMapper = AdminRoleDao.class, middleClazz = AdminRole.class, leftField = "adminId", rightField = "roleId")
+    private transient List<Role> roles;
+
+    @Cloumn("扩展")
+    @OneToOne(mapper = AdminExtendDao.class, one = "adminId")
+    private transient AdminExtend adminExtend;
+
+    @Cloumn("uuid表")
+    @OneToMore(mapper = AdminUuidDao.class, more = "adminId")
+    private transient List<AdminUuid> uuid;
 
     public String getPassport() {
         return passport;
@@ -77,6 +93,22 @@ public class Admin extends LongEntity {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public AdminExtend getAdminExtend() {
+        return adminExtend;
+    }
+
+    public void setAdminExtend(AdminExtend adminExtend) {
+        this.adminExtend = adminExtend;
+    }
+
+    public List<AdminUuid> getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(List<AdminUuid> uuid) {
+        this.uuid = uuid;
     }
 }
 

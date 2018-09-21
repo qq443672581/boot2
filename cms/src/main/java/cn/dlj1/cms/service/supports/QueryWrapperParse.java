@@ -1,9 +1,9 @@
 package cn.dlj1.cms.service.supports;
 
-import cn.dlj1.cms.db.condition.Between;
-import cn.dlj1.cms.db.condition.Cnd;
-import cn.dlj1.cms.db.condition.Condition;
-import cn.dlj1.cms.db.condition.QueryType;
+import cn.dlj1.cms.dao.condition.Between;
+import cn.dlj1.cms.dao.condition.Cnd;
+import cn.dlj1.cms.dao.condition.Condition;
+import cn.dlj1.cms.dao.condition.QueryType;
 import cn.dlj1.cms.request.query.Sort;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 

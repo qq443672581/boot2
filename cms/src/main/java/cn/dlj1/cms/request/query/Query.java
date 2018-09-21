@@ -1,6 +1,6 @@
 package cn.dlj1.cms.request.query;
 
-import cn.dlj1.cms.db.condition.Cnd;
+import cn.dlj1.cms.dao.condition.Cnd;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

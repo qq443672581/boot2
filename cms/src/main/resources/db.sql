@@ -42,3 +42,18 @@ CREATE TABLE `sys_role_menu` (
   `menu_id` INT(10) NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色表';
+
+CREATE TABLE `sys_admin_extend` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `admin_id` INT(10) NOT NULL COMMENT 'adminId',
+  `birthday` datetime COMMENT '生日',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `admin_id` (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员扩展表';
+
+CREATE TABLE `sys_admin_uuid` (
+  `id` INT(10) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `admin_id` INT(10) NOT NULL COMMENT 'adminId',
+  `uuid` VARCHAR(32) COMMENT 'uuid',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='管理员uuid表';

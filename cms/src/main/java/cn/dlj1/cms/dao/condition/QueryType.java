@@ -1,4 +1,4 @@
-package cn.dlj1.cms.db.condition;
+package cn.dlj1.cms.dao.condition;
 
 public enum QueryType {
 

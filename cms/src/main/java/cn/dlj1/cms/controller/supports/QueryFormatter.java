@@ -1,7 +1,7 @@
 package cn.dlj1.cms.controller.supports;
 
-import cn.dlj1.cms.db.condition.Cnd;
-import cn.dlj1.cms.db.condition.CndResolver;
+import cn.dlj1.cms.dao.condition.Cnd;
+import cn.dlj1.cms.dao.condition.CndResolver;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.utils.DateUtils;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package cn.dlj1.cms.db.condition;
+package cn.dlj1.cms.dao.condition;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

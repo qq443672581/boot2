@@ -46,12 +46,12 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param entity
      * @return
      */
-    default Result add(T entity) {
+    default Result add(HttpServletRequest request, T entity) {
         fill(false, entity);
-        int i = getDao().insert(entity);
-        if (i == 1) {
+        Serializable id = getDao().add_(request, entity);
+        if (null != id) {
             logger.info("保存实体[{}][{}]", getModuleClazz().getName(), entity.getId());
-            return new Result.Success(entity.getId());
+            return new Result.Success(id);
         }
         logger.error("保存实体[{}]时错误", getModuleClazz().getName());
         return Result.FAIL;
@@ -113,15 +113,12 @@ public interface ActionService<T extends Entity> extends Service<T> {
         queryWrapper.select(FieldUtils.getSearchFields(getModuleClazz()));
         queryWrapper.eq(EntityUtils.getEntityPk(getModuleClazz()), id);
 
-//        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
-        Entity t = getDao().selectOne(queryWrapper);
+        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
 
-
-//        if (null == list || list.size() != 1) {
-//            return new Result.Fail("数据不存在!");
-//        }
-//        return new Result.Success(list.get(0));
-        return new Result.Success(t);
+        if (null == list || list.size() == 0) {
+            return new Result.Fail("数据不存在!");
+        }
+        return new Result.Success(list.get(0));
     }
 
     /**
