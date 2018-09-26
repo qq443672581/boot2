@@ -28,6 +28,7 @@
         <module>swagger2</module>
         <module>cms</module>
         <module>shell</module>
+        <module>mybatisplus</module>
     </modules>
 
     <dependencies>
