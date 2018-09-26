@@ -4,6 +4,7 @@ import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.service.ActionService;
 import cn.dlj1.cms.service.ExportService;
 import cn.dlj1.cms.service.TableService;
+import cn.dlj1.cms.utils.Security;
 import cn.dlj1.cms.web.dao.sys.auth.AdminDao;
 import cn.dlj1.cms.web.entity.sys.auth.Admin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,13 @@ public class AdminService implements
         return dao;
     }
 
+    @Override
+    public void fill(boolean isEdit, Admin entity) {
+        if (null != entity.getPassword()) {
+            entity.setPassword(Security.md5(entity.getPassword()));
+        }
+        if (isEdit) {
+        }
+    }
 }
 

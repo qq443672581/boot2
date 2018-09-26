@@ -5,100 +5,125 @@ import cn.dlj1.cms.dao.annotation.MoreToMore;
 import cn.dlj1.cms.dao.annotation.OneToMore;
 import cn.dlj1.cms.dao.annotation.OneToOne;
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.exception.MessageException;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class RelationAddProcess {
+public interface RelationAddProcess {
 
-    Field[] relationFields;
+    HttpServletRequest getRequest();
 
-    HttpServletRequest request;
+    Entity getEntity();
 
-    ApplicationContext context;
+    boolean isRecursion();
 
-    Entity entity;
-
-    boolean recursion;
-
-    public RelationAddProcess(Field[] relationFields, ApplicationContext context, Entity entity) {
-        this.relationFields = relationFields;
-        this.context = context;
-        this.entity = entity;
+    default Field[] getFields() {
+        return RelationFieldCache.getRelationFields(getEntity().getClass());
     }
 
-    public void process() {
-        if (relationFields.length == 0) {
+    default ApplicationContext getContext() {
+        return WebApplicationContextUtils.getWebApplicationContext(getRequest().getServletContext());
+    }
+
+    default void check() {
+        if (getFields().length == 0) {
             return;
         }
+    }
 
-        for (int i = 0; i < relationFields.length; i++) {
-            if (null != relationFields[i].getAnnotation(OneToOne.class)) {
-                // 一对一
-                OneToOne oneToOne = relationFields[i].getAnnotation(OneToOne.class);
-                Dao dao = (Dao) context.getBean(oneToOne.mapper());
-                try {
-                    Object relationValue = FieldUtils.readField(entity, oneToOne.field(), true);
-                    Object relationEntity = FieldUtils.readField(relationFields[i], entity, true);
-                    FieldUtils.writeField(relationEntity, oneToOne.one(), relationValue, true);
-                    dao._add_(request, (Entity) relationEntity, recursion);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            } else if (null != relationFields[i].getAnnotation(OneToMore.class)) {
-                // 一对多
-                OneToMore oneToMore = relationFields[i].getAnnotation(OneToMore.class);
-                Dao dao = (Dao) context.getBean(oneToMore.mapper());
-                try {
-                    Object relationValue = FieldUtils.readField(entity, oneToMore.field(), true);
-                    Object relationEntity = FieldUtils.readField(relationFields[i], entity, true);
-                    if (null != relationEntity) {
-                        List relationList = (List) relationEntity;
-                        for (int j = 0; j < relationList.size(); j++) {
-                            Object obj = relationList.get(j);
-                            FieldUtils.writeField(obj, oneToMore.more(), relationValue, true);
-                            dao._add_(request, (Entity) obj, recursion);
-                        }
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+    default void add() {
+        check();
 
-            } else if (null != relationFields[i].getAnnotation(MoreToMore.class)) {
-                MoreToMore moreToMore = relationFields[i].getAnnotation(MoreToMore.class);
-                Dao dao = (Dao) context.getBean(moreToMore.middleMapper());
-                try {
-                    // 关联字段
-                    Object relationValue = FieldUtils.readField(entity, moreToMore.field(), true);
-                    Object relationEntity = FieldUtils.readField(relationFields[i], entity, true);
-                    if (null != relationEntity) {
-                        List relationList = (List) relationEntity;
-                        for (int j = 0; j < relationList.size(); j++) {
-                            Object obj = relationList.get(j);
-                            // 关联字段
-                            Object fieldValue = FieldUtils.readField(obj, moreToMore.more(), true);
-                            try {
-                                Object middleEntity = moreToMore.middleClazz().newInstance();
+        try {
+            process();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new MessageException("系统错误!");
+        }
 
-                                FieldUtils.writeField(middleEntity, moreToMore.leftField(), relationValue, true);
-                                FieldUtils.writeField(middleEntity, moreToMore.rightField(), fieldValue, true);
+    }
 
-                                dao._add_(request, (Entity) middleEntity, recursion);
-                            } catch (InstantiationException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+    default void process() throws IllegalAccessException {
+        Field[] fields = getFields();
+        for (int i = 0; i < getFields().length; i++) {
+            Field field = fields[i];
 
+            if (null != field.getAnnotation(OneToOne.class)) {
+                oneToOne(field);
+                continue;
+            }
+            if (null != getFields()[i].getAnnotation(OneToMore.class)) {
+                oneToMore(field);
+                continue;
+            }
+            if (null != getFields()[i].getAnnotation(MoreToMore.class)) {
+                MoreToMore(field);
+                continue;
             }
 
 
         }
     }
+
+    default void oneToOne(Field field) throws IllegalAccessException {
+        // 一对一
+        OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+        Dao dao = (Dao) getContext().getBean(oneToOne.mapper());
+
+        Object relationValue = FieldUtils.readField(getEntity(), oneToOne.field(), true);
+        Object relationEntity = FieldUtils.readField(field, getEntity(), true);
+        FieldUtils.writeField(relationEntity, oneToOne.one(), relationValue, true);
+        dao._add_(getRequest(), (Entity) relationEntity, isRecursion());
+    }
+
+    default void oneToMore(Field field) throws IllegalAccessException {
+        // 一对多
+        OneToMore oneToMore = field.getAnnotation(OneToMore.class);
+        Dao dao = (Dao) getContext().getBean(oneToMore.mapper());
+
+        Object relationValue = FieldUtils.readField(getEntity(), oneToMore.field(), true);
+        Object relationEntity = FieldUtils.readField(field, getEntity(), true);
+        if (null != relationEntity) {
+            List relationList = (List) relationEntity;
+            for (int j = 0; j < relationList.size(); j++) {
+                Object obj = relationList.get(j);
+                FieldUtils.writeField(obj, oneToMore.more(), relationValue, true);
+                dao._add_(getRequest(), (Entity) obj, isRecursion());
+            }
+        }
+
+    }
+
+    default void MoreToMore(Field field) throws IllegalAccessException {
+        MoreToMore moreToMore = field.getAnnotation(MoreToMore.class);
+        Dao dao = (Dao) getContext().getBean(moreToMore.middleMapper());
+
+        // 关联字段
+        Object relationValue = FieldUtils.readField(getEntity(), moreToMore.field(), true);
+        Object relationEntity = FieldUtils.readField(field, getEntity(), true);
+        if (null != relationEntity) {
+            List relationList = (List) relationEntity;
+            for (int j = 0; j < relationList.size(); j++) {
+                Object obj = relationList.get(j);
+                // 关联字段
+                Object fieldValue = FieldUtils.readField(obj, moreToMore.more(), true);
+                try {
+                    Object middleEntity = moreToMore.middleClazz().newInstance();
+
+                    FieldUtils.writeField(middleEntity, moreToMore.leftField(), relationValue, true);
+                    FieldUtils.writeField(middleEntity, moreToMore.rightField(), fieldValue, true);
+
+                    dao._add_(getRequest(), (Entity) middleEntity, isRecursion());
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 }
