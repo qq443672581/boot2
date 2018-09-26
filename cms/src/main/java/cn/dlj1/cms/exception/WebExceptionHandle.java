@@ -3,6 +3,8 @@ package cn.dlj1.cms.exception;
 import cn.dlj1.cms.response.Result;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +12,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import sun.misc.Regexp;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 统一异常处理
@@ -22,7 +28,7 @@ public class WebExceptionHandle {
     // 自定义的消息异常
     @ExceptionHandler(MessageException.class)
     @ResponseBody
-    public Result bindException(MessageException exception) {
+    public Result messageException(MessageException exception) {
         String message = exception.getMessage();
         Class clazz = exception.getClazz();
         String clazzName = null == clazz ? "" : clazz.getName();
@@ -58,6 +64,37 @@ public class WebExceptionHandle {
         return new Result.Fail(msg);
     }
 
+    // 数据库 unique 重复
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseBody
+    public Result bindException(DuplicateKeyException exception) {
+        String msg = exception.getCause().getMessage();
+        try {
+            Pattern pattern = Pattern.compile("Duplicate entry '(.*)' for key '(.*)'");
+            Matcher matcher = pattern.matcher(msg);
+            String field = null;
+            String str = null;
+            while (matcher.find()) {
+                matcher.group(0);
+                str = matcher.group(1);
+                field = matcher.group(2);
+                break;
+            }
+            msg = String.format("字段[%s]值[%s]重复", field, str);
+        } catch (Exception e) {
+            msg = "数据重复!";
+        }
+
+        return new Result.Fail(msg);
+    }
+
+    // json数据绑定格式异常
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseBody
+    public Result bindException(HttpMessageNotReadableException exception) {
+        return messageException((MessageException) exception.getCause().getCause());
+    }
+
     // 数据绑定异常
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
@@ -81,4 +118,5 @@ public class WebExceptionHandle {
         log.error(String.format("异常:[%s]", exception.getMessage()));
         return Result.FAIL;
     }
+
 }

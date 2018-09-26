@@ -1,71 +1,40 @@
-package cn.dlj1.cms.dao;
+package cn.dlj1.cms.dao.support;
 
+import cn.dlj1.cms.dao.Dao;
 import cn.dlj1.cms.dao.annotation.MoreToMore;
 import cn.dlj1.cms.dao.annotation.OneToMore;
 import cn.dlj1.cms.dao.annotation.OneToOne;
-import cn.dlj1.cms.dao.support.RelationFieldCache;
 import cn.dlj1.cms.entity.Entity;
-import cn.dlj1.cms.exception.MessageException;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-/**
- * dao(mapper)扩展接口
- * <p>
- * 接口
- */
-public interface Dao<T extends Entity> extends BaseMapper<T> {
+public class RelationAddProcess {
 
-    /**
-     * 获取模块类型
-     *
-     * @return
-     */
-    default Class<T> getModuleClazz() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
+    Field[] relationFields;
+
+    HttpServletRequest request;
+
+    ApplicationContext context;
+
+    Entity entity;
+
+    boolean recursion;
+
+    public RelationAddProcess(Field[] relationFields, ApplicationContext context, Entity entity) {
+        this.relationFields = relationFields;
+        this.context = context;
+        this.entity = entity;
     }
 
-    /**
-     * 关联添加
-     *
-     * @param request
-     * @param entity
-     * @param recursion 是否递归属性的关联查询
-     * @return
-     */
-    default Serializable _add_(HttpServletRequest request, T entity, boolean recursion) {
-        if (null == entity) {
-            throw new MessageException("保存对象不能为空!");
-        }
-
-        int size = insert(entity);
-        if (size == 0) {
-            return null;
-        }
-        Object id = null;
-        try {
-            Field pkField = RelationFieldCache.getEntityPkField(entity.getClass());
-            id = FieldUtils.readField(entity, pkField.getName(), true);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-
-        // 如果有级联注解
-        Field[] relationFields = RelationFieldCache.getRelationFields(entity.getClass());
+    public void process() {
         if (relationFields.length == 0) {
-            return (Serializable) id;
+            return;
         }
 
-        ApplicationContext context =
-                WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
         for (int i = 0; i < relationFields.length; i++) {
             if (null != relationFields[i].getAnnotation(OneToOne.class)) {
                 // 一对一
@@ -131,16 +100,5 @@ public interface Dao<T extends Entity> extends BaseMapper<T> {
 
 
         }
-
-        return (Serializable) id;
     }
-
-    default void _delete_(HttpServletRequest request, Serializable... ids) {
-
-    }
-
-    default void _edit_(HttpServletRequest request, T entity) {
-
-    }
-
 }

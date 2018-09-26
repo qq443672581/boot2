@@ -48,7 +48,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      */
     default Result add(HttpServletRequest request, T entity) {
         fill(false, entity);
-        Serializable id = getDao().add_(request, entity);
+        Serializable id = getDao()._add_(request, entity, false);
         if (null != id) {
             logger.info("保存实体[{}][{}]", getModuleClazz().getName(), entity.getId());
             return new Result.Success(id);

@@ -14,6 +14,8 @@ import java.util.Locale;
 /**
  * 参数类型绑定
  * <p>
+ * 适用于<b>Form表单</b>提交时的绑定
+ * <p>
  * <p>
  * {@link cn.dlj1.cms.request.query.Query}
  * {@link Cnd}
