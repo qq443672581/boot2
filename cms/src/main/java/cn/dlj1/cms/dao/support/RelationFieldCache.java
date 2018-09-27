@@ -3,6 +3,7 @@ package cn.dlj1.cms.dao.support;
 import cn.dlj1.cms.dao.annotation.MoreToMore;
 import cn.dlj1.cms.dao.annotation.OneToMore;
 import cn.dlj1.cms.dao.annotation.OneToOne;
+import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.utils.ClassUtils;
 import com.baomidou.mybatisplus.annotation.TableId;
 
@@ -17,11 +18,15 @@ import java.util.Map;
  */
 public class RelationFieldCache {
 
-    final static Object lock = new Object();
-    // 实体的关联字段
-    public static Map<String, Field[]> RELATION_FIELD = new HashMap<>();
+    private RelationFieldCache() {
+    }
+
+    static Object lock = new Object();
+
+    // 实体含有的关联 字段数组
+    static Map<String, Field[]> RELATION_FIELD = new HashMap<>();
     // 实体的主键字段
-    public static Map<String, Field> ENTITY_PRIMARY_KEY = new HashMap<>();
+    static Map<String, Field> ENTITY_PRIMARY_KEY = new HashMap<>();
 
     public static Field[] getRelationFields(Class clazz) {
         Field[] fields = RELATION_FIELD.get(clazz.getName());

@@ -3,6 +3,7 @@ package cn.dlj1.cms.web.entity.sys.auth;
 import cn.dlj1.cms.entity.LongEntity;
 import cn.dlj1.cms.entity.annotation.Cloumn;
 import cn.dlj1.cms.entity.annotation.Table;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.sql.Date;
@@ -14,6 +15,7 @@ import java.sql.Date;
 public class AdminExtend extends LongEntity {
 
     @Cloumn("管理员ID")
+    @TableField("admin_id")
     private Long adminId;
 
     @Cloumn("生日")

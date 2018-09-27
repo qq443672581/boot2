@@ -44,12 +44,12 @@ public class Admin extends LongEntity {
     private Integer state;
 
     @Cloumn("角色")
-    @MoreToMore(mapper = RoleDao.class, middleMapper = AdminRoleDao.class, middleClazz = AdminRole.class, leftField = "adminId", rightField = "roleId")
+    @MoreToMore(mapper = RoleDao.class, middleMapper = AdminRoleDao.class, leftField = "adminId", rightField = "roleId")
     private transient List<Role> roles;
 
     @Cloumn("扩展")
     @OneToOne(mapper = AdminExtendDao.class, one = "adminId")
-    private transient AdminExtend adminExtend;
+    private transient AdminExtend extend;
 
     @Cloumn("uuid表")
     @OneToMore(mapper = AdminUuidDao.class, more = "adminId")
@@ -95,12 +95,12 @@ public class Admin extends LongEntity {
         this.state = state;
     }
 
-    public AdminExtend getAdminExtend() {
-        return adminExtend;
+    public AdminExtend getExtend() {
+        return extend;
     }
 
-    public void setAdminExtend(AdminExtend adminExtend) {
-        this.adminExtend = adminExtend;
+    public void setExtend(AdminExtend extend) {
+        this.extend = extend;
     }
 
     public List<AdminUuid> getUuid() {

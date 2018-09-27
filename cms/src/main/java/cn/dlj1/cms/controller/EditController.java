@@ -4,9 +4,13 @@ import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.response.Result;
 import cn.dlj1.cms.web.auth.annotation.Menu;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 修改接口
@@ -14,11 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public interface EditController<T extends Entity> extends Controller<T> {
 
 
-    @PutMapping("/edit")
+    @PostMapping("/edit")
     @ResponseBody
     @Menu(value = "修改", key = "edit")
-    default Result edit(@RequestBody @Validated(Entity.edit.class) T entity) {
-        return getActionService().edit(entity);
+    default Result edit(HttpServletRequest request, @RequestBody @Validated(Entity.edit.class) T entity) {
+        return getActionService().edit(request, entity);
     }
 
 }

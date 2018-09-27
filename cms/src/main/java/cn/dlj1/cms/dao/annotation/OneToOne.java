@@ -20,7 +20,7 @@ public @interface OneToOne {
     String field() default "id";
 
     /**
-     * 关联类
+     * 关联实体的mapper
      *
      * @return
      */

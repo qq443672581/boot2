@@ -10,6 +10,10 @@ import java.lang.annotation.*;
  * <br>
  * 需要引入了中间表 <br>
  * <br>
+ *
+ * left_table           middle_table            right_table
+ *    id        left_table_id  right_table_id       id
+ *
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,6 +27,13 @@ public @interface MoreToMore {
      * @return
      */
     String field() default "id";
+
+    /**
+     * 中间表的mapper
+     *
+     * @return
+     */
+    Class<? extends BaseMapper> middleMapper();
 
     /**
      * 左表在中间表的字段，左字段
@@ -39,6 +50,13 @@ public @interface MoreToMore {
     String rightField();
 
     /**
+     * 右表的mapper
+     *
+     * @return
+     */
+    Class<? extends BaseMapper> mapper();
+
+    /**
      * 关联的表的字段
      * 别名：右表
      *
@@ -46,25 +64,5 @@ public @interface MoreToMore {
      */
     String more() default "id";
 
-    /**
-     * 中间表的mapper
-     *
-     * @return
-     */
-    Class<? extends BaseMapper> middleMapper();
-
-    /**
-     * 中间表的类型，用于产生实例
-     *
-     * @return
-     */
-    Class<? extends Entity> middleClazz();
-
-    /**
-     * 右表的mapper
-     *
-     * @return
-     */
-    Class<? extends BaseMapper> mapper();
 
 }

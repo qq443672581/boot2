@@ -1,16 +1,20 @@
 package cn.dlj1.cms.dao;
 
-import cn.dlj1.cms.dao.support.RelationAddProcess;
+import cn.dlj1.cms.dao.support.DaoUtils;
 import cn.dlj1.cms.dao.support.RelationFieldCache;
+import cn.dlj1.cms.dao.support.relationQueryImpl.RelationAddProcess;
+import cn.dlj1.cms.dao.support.relationQueryImpl.RelationDeleteProcess;
+import cn.dlj1.cms.dao.support.relationQueryImpl.RelationEditProcess;
 import cn.dlj1.cms.entity.Entity;
+import cn.dlj1.cms.entity.annotation.TableFieldUtils;
 import cn.dlj1.cms.exception.MessageException;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.commons.lang.reflect.FieldUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 
 /**
  * dao(mapper)扩展接口
@@ -20,23 +24,13 @@ import java.lang.reflect.ParameterizedType;
 public interface Dao<T extends Entity> extends BaseMapper<T> {
 
     /**
-     * 获取模块类型
-     *
-     * @return
-     */
-    default Class<T> getModuleClazz() {
-        return (Class<T>) ((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
-    }
-
-    /**
      * 关联添加
      *
      * @param request
      * @param entity
-     * @param recursion 是否递归属性的关联查询
      * @return
      */
-    default Serializable _add_(HttpServletRequest request, T entity, boolean recursion) {
+    default Serializable _add_(HttpServletRequest request, T entity) {
         if (null == entity) {
             throw new MessageException("保存对象不能为空!");
         }
@@ -53,7 +47,7 @@ public interface Dao<T extends Entity> extends BaseMapper<T> {
             e.printStackTrace();
         }
 
-        // 如果有级联
+        // 如果没有级联
         Field[] relationFields = RelationFieldCache.getRelationFields(entity.getClass());
         if (relationFields.length == 0) {
             return (Serializable) id;
@@ -69,21 +63,90 @@ public interface Dao<T extends Entity> extends BaseMapper<T> {
             public Entity getEntity() {
                 return entity;
             }
-
-            @Override
-            public boolean isRecursion() {
-                return recursion;
-            }
         }.add();
 
         return (Serializable) id;
     }
 
-    default void _delete_(HttpServletRequest request, Serializable... ids) {
+    default int _delete_(HttpServletRequest request, Class<T> clazz, Serializable id) {
+        if (null == id) {
+            throw new MessageException("删除数据不能为空!");
+        }
 
+        int ret = selectCount(new QueryWrapper<T>().eq(TableFieldUtils.getName(RelationFieldCache.getEntityPkField(clazz)), id));
+        if (ret != 1) {
+            return -1;
+        }
+        ret = deleteById(id);
+
+        // 如果没有关联字段
+        if (ret == 0 || RelationFieldCache.getRelationFields(clazz).length == 0) {
+            return ret;
+        }
+
+        new RelationDeleteProcess() {
+            @Override
+            public HttpServletRequest getRequest() {
+                return request;
+            }
+
+            @Override
+            public Class getClazz() {
+                return clazz;
+            }
+
+            @Override
+            public T getEntity(Serializable id) {
+                return selectById(id);
+            }
+
+            @Override
+            public Serializable getId() {
+                return id;
+            }
+        }.delete();
+
+        return ret;
     }
 
-    default void _edit_(HttpServletRequest request, T entity) {
+    default int _edit_(HttpServletRequest request, T entity) {
+        if (null == entity) {
+            throw new MessageException("数据不能为空!");
+        }
+
+        int level = DaoUtils.editLevel(entity);
+        if (level == 1) {
+            throw new MessageException("无可修改数据!");
+        }
+        int ret = 0;
+        if (level == 2 || level == 4) {
+            ret = updateById(entity);
+            if (ret == 0) {
+                return 0;
+            }
+        }
+
+        // 如果没有关联字段
+        if (ret == 0 && RelationFieldCache.getRelationFields(entity.getClass()).length == 0) {
+            return ret;
+        }
+        ret = 1;
+
+        new RelationEditProcess() {
+            @Override
+            public HttpServletRequest getRequest() {
+                return request;
+            }
+
+            @Override
+            public Entity getEntity() {
+                return entity;
+            }
+
+        }.edit();
+
+
+        return ret;
 
     }
 

@@ -48,7 +48,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      */
     default Result add(HttpServletRequest request, T entity) {
         fill(false, entity);
-        Serializable id = getDao()._add_(request, entity, false);
+        Serializable id = getDao()._add_(request, entity);
         if (null != id) {
             logger.info("保存实体[{}][{}]", getModuleClazz().getName(), entity.getId());
             return new Result.Success(id);
@@ -57,6 +57,8 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
+    public static final Result EDIT_FAIL = new Result.Fail("修改失败!");
+
     /**
      * 修改 <br>
      * 根据ID <br>
@@ -64,14 +66,14 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param entity
      * @return
      */
-    default Result edit(T entity) {
+    default Result edit(HttpServletRequest request, T entity) {
         fill(false, entity);
-        int i = getDao().updateById(entity);
+        int i = getDao()._edit_(request, entity);
         if (i == 1) {
             return Result.SUCCESS;
         }
         logger.error("修改实体[{}]时错误", getModuleClazz().getName());
-        return Result.FAIL;
+        return EDIT_FAIL;
     }
 
     /**
@@ -90,12 +92,16 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param ids
      * @return
      */
-    default Result delete(Serializable... ids) {
+    default Result delete(HttpServletRequest request, Serializable... ids) {
         if (null == ids || ids.length == 0) {
             return Result.FAIL_NULL;
         }
         for (int i = 0; i < ids.length; i++) {
-            if (getDao().deleteById(ids[i]) != 1) {
+            int ret = getDao()._delete_(request, getModuleClazz(), ids[i]);
+            if (ret == -1) {
+                throw new MessageException(getModuleClazz(), "删除失败,数据不存在!");
+            }
+            if (ret != 1) {
                 throw new MessageException(getModuleClazz(), "删除失败!");
             }
         }

@@ -24,3 +24,6 @@ ec:
     module-ext:
       cn.dlj1.cms.web.entity.User:
         - txt
+logging:
+  level:
+    cn.dlj1.cms: debug
