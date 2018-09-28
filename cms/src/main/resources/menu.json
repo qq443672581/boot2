@@ -1,0 +1,18 @@
+{
+  "menu": [
+    {
+      "name": "系统管理",
+      "children": [
+        {
+          "name": "权限管理",
+          "children": [
+            {
+              "name": "管理员管理",
+              "path": "/sys/auth/admin"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
@@ -18,8 +19,8 @@ public interface ViewController<T extends Entity, K extends Serializable> extend
     @GetMapping("/view")
     @ResponseBody
     @Menu(value = "查看", key = "view")
-    default Result view(@Validated(Entity.view.class) @NotNull K id) {
-        return getActionService().view(id);
+    default Result view(HttpServletRequest request, @Validated(Entity.view.class) @NotNull K id) {
+        return getActionService().view(request, id);
     }
 
 }

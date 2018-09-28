@@ -12,6 +12,8 @@ spring:
     proxy-target-class: true
   application:
     name: CMS
+  main:
+    banner-mode: log
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   configuration:

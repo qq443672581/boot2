@@ -60,7 +60,7 @@ public interface RelationEditProcess {
 
     default void process() throws IllegalAccessException {
         Field[] fields = getFields();
-        for (int i = 0; i < getFields().length; i++) {
+        for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             Object relationObj = FieldUtils.readField(field, getEntity(), true);
             if (null == relationObj) {

@@ -22,7 +22,10 @@ public class Menu extends LongEntity {
     private int parent;
 
     @Cloumn("类路径")
-    private String clazz;
+    private String bean;
+
+    @Cloumn("方法名")
+    private String method;
 
     public String getTitle() {
         return title;
@@ -56,11 +59,19 @@ public class Menu extends LongEntity {
         this.parent = parent;
     }
 
-    public String getClazz() {
-        return clazz;
+    public String getBean() {
+        return bean;
     }
 
-    public void setClazz(String clazz) {
-        this.clazz = clazz;
+    public void setBean(String bean) {
+        this.bean = bean;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 }

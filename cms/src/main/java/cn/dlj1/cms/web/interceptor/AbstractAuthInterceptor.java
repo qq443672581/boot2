@@ -47,6 +47,7 @@ public abstract class AbstractAuthInterceptor extends HandlerInterceptorAdapter 
         // 验证token
         String authToken = request.getHeader("auth-token");
         if (null == authToken || (!this.sessionFactory.has(authToken))) {
+            // 去登陆
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().append(this.AUTH_LOGIN).close();
             return false;

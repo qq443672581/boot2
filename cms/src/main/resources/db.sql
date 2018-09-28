@@ -30,7 +30,8 @@ CREATE TABLE `sys_menu` (
   `path` varchar(128) NOT NULL COMMENT '路径',
   `act_key` varchar(16) NOT NULL DEFAULT '' COMMENT '操作key',
   `parent` INT(10) NOT NULL COMMENT '状态,1为可用,0不可用',
-  `clazz` varchar(128) NOT NULL DEFAULT '' COMMENT '报名',
+  `bean` varchar(128) NOT NULL DEFAULT '' COMMENT '类路径',
+  `method` varchar(32) NOT NULL DEFAULT '' COMMENT '方法名',
 
   PRIMARY KEY (`id`),
   UNIQUE KEY `path` (`path`)

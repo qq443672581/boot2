@@ -4,10 +4,8 @@ import cn.dlj1.cms.config.GlobalConfig;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.entity.annotation.SelectModule;
 import cn.dlj1.cms.entity.annotation.SelectModuleUtils;
-import cn.dlj1.cms.entity.support.EntityUtils;
 import cn.dlj1.cms.exception.MessageException;
 import cn.dlj1.cms.response.Result;
-import cn.dlj1.cms.service.supports.FieldUtils;
 import cn.dlj1.cms.service.supports.FileUploadUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -23,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,14 +28,16 @@ import java.util.Map;
  *
  * @param <T>
  */
-@Transactional
 public interface ActionService<T extends Entity> extends Service<T> {
 
     static Logger logger = LoggerFactory.getLogger(GlobalConfig.class);
 
+    Result EDIT_FAIL = new Result.Fail("修改失败!");
+
     Result UPLOAD_FILE_SIZE_TOO_BIG = new Result.Fail("文件太大!");
     Result UPLOAD_FILE_EXT_NOT_ALLOW = new Result.Fail("不被允许的文件类型!");
     Result SELECT_MODULE_NOT_CONFIG = new Result.Fail("下拉模块未配置!");
+
 
     /**
      * 添加
@@ -46,6 +45,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param entity
      * @return
      */
+    @Transactional
     default Result add(HttpServletRequest request, T entity) {
         fill(false, entity);
         Serializable id = getDao()._add_(request, entity);
@@ -57,8 +57,6 @@ public interface ActionService<T extends Entity> extends Service<T> {
         return Result.FAIL;
     }
 
-    public static final Result EDIT_FAIL = new Result.Fail("修改失败!");
-
     /**
      * 修改 <br>
      * 根据ID <br>
@@ -66,6 +64,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param entity
      * @return
      */
+    @Transactional
     default Result edit(HttpServletRequest request, T entity) {
         fill(false, entity);
         int i = getDao()._edit_(request, entity);
@@ -92,6 +91,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param ids
      * @return
      */
+    @Transactional
     default Result delete(HttpServletRequest request, Serializable... ids) {
         if (null == ids || ids.length == 0) {
             return Result.FAIL_NULL;
@@ -109,22 +109,18 @@ public interface ActionService<T extends Entity> extends Service<T> {
     }
 
     /**
-     * 展示
+     * 单条查询
      *
+     * @param request
      * @param id
      * @return
      */
-    default Result view(Serializable id) {
-        QueryWrapper queryWrapper = new QueryWrapper<T>();
-        queryWrapper.select(FieldUtils.getSearchFields(getModuleClazz()));
-        queryWrapper.eq(EntityUtils.getEntityPk(getModuleClazz()), id);
-
-        List<Map<String, Object>> list = getDao().selectMaps(queryWrapper);
-
-        if (null == list || list.size() == 0) {
+    default Result view(HttpServletRequest request, Serializable id) {
+        Map<String, Object> map = getDao()._view_(request, getModuleClazz(), id, true);
+        if (null == map) {
             return new Result.Fail("数据不存在!");
         }
-        return new Result.Success(list.get(0));
+        return new Result.Success(map);
     }
 
     /**
@@ -160,6 +156,7 @@ public interface ActionService<T extends Entity> extends Service<T> {
      * @param ele
      * @return
      */
+    @Transactional
     default Result upload(HttpServletRequest request, MultipartFile ele) {
         GlobalConfig config = getGlobalConfig(request);
         String fileName = ele.getOriginalFilename();

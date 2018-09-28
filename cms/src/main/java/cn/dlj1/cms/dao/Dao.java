@@ -5,6 +5,7 @@ import cn.dlj1.cms.dao.support.RelationFieldCache;
 import cn.dlj1.cms.dao.support.relationQueryImpl.RelationAddProcess;
 import cn.dlj1.cms.dao.support.relationQueryImpl.RelationDeleteProcess;
 import cn.dlj1.cms.dao.support.relationQueryImpl.RelationEditProcess;
+import cn.dlj1.cms.dao.support.relationQueryImpl.RelationQueryProcess;
 import cn.dlj1.cms.entity.Entity;
 import cn.dlj1.cms.entity.annotation.TableFieldUtils;
 import cn.dlj1.cms.exception.MessageException;
@@ -15,6 +16,8 @@ import org.apache.commons.lang.reflect.FieldUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.lang.reflect.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * dao(mapper)扩展接口
@@ -148,6 +151,43 @@ public interface Dao<T extends Entity> extends BaseMapper<T> {
 
         return ret;
 
+    }
+
+    default Map<String, Object> _view_(HttpServletRequest request, Class<T> clazz, Serializable id, boolean relation) {
+        QueryWrapper queryWrapper = new QueryWrapper<T>();
+
+        queryWrapper.select(cn.dlj1.cms.service.supports.FieldUtils.getSearchFields(clazz));
+        queryWrapper.eq(TableFieldUtils.getName(RelationFieldCache.getEntityPkField(clazz)), id);
+
+        List<Map<String, Object>> list = selectMaps(queryWrapper);
+
+        if (null == list || list.size() == 0) {
+            return null;
+        }
+        Map<String, Object> map = list.get(0);
+        // 如果没有关联字段
+        if (!relation || RelationFieldCache.getRelationFields(clazz).length == 0) {
+            return map;
+        }
+
+        new RelationQueryProcess() {
+            @Override
+            public HttpServletRequest getRequest() {
+                return request;
+            }
+
+            @Override
+            public Class getClazz() {
+                return clazz;
+            }
+
+            @Override
+            public Map<String, Object> getMap() {
+                return map;
+            }
+        }.query();
+
+        return map;
     }
 
 }
