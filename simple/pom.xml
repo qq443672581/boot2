@@ -13,5 +13,11 @@
     <packaging>jar</packaging>
     <description>简单springboot2.0项目</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
