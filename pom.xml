@@ -29,6 +29,7 @@
         <module>cms</module>
         <module>shell</module>
         <module>mybatisplus</module>
+        <module>rabbitMQ</module>
     </modules>
 
     <dependencies>
