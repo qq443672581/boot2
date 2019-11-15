@@ -1,0 +1,6 @@
+spring:
+  rabbitmq:
+    username: u
+    password: 123456
+    virtual-host: test
+    addresses: jd.dlj1.cn:5672

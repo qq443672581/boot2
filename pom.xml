@@ -30,6 +30,9 @@
         <module>shell</module>
         <module>mybatisplus</module>
         <module>rabbitMQ</module>
+        <module>lock</module>
+        <module>web</module>
+        <module>minio</module>
     </modules>
 
     <dependencies>
